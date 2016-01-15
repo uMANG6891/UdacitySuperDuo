@@ -10,13 +10,12 @@ import android.view.ViewGroup;
 
 public class About extends Fragment {
 
-    public About(){
+    public About() {
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_about, container, false);
         return rootView;
     }
