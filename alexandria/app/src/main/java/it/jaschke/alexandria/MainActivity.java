@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import it.jaschke.alexandria.api.Callback;
+import it.jaschke.alexandria.services.BookService;
+import it.jaschke.alexandria.utility.Utility;
 
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, Callback {
@@ -32,10 +34,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
      */
     private CharSequence title;
     public static boolean IS_TABLET = false;
-    private BroadcastReceiver messageReciever;
+    private BroadcastReceiver messageReceiver;
 
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
-    public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             setContentView(R.layout.activity_main);
         }
 
-        messageReciever = new MessageReciever();
+        messageReceiver = new MessageReceiver();
         IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
-        LocalBroadcastManager.getInstance(this).registerReceiver(messageReciever, filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, filter);
 
         navigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -128,7 +129,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReciever);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
         super.onDestroy();
     }
 
@@ -151,12 +152,35 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     }
 
-    private class MessageReciever extends BroadcastReceiver {
+    private class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getStringExtra(MESSAGE_KEY) != null) {
-                Toast.makeText(MainActivity.this, intent.getStringExtra(MESSAGE_KEY), Toast.LENGTH_LONG).show();
+            int message = 0;
+            if (!Utility.isNetworkAvailable(getBaseContext())) {
+                message = R.string.search_status_no_network;
+            } else {
+                switch (Utility.getSearchStatus(getBaseContext())) {
+                    case BookService.SEARCH_STATUS_OK:
+                        message = -1;
+                        break;
+                    case BookService.SEARCH_STATUS_OK_EMPTY:
+                        message = R.string.search_status_ok_empty;
+                        break;
+                    case BookService.SEARCH_STATUS_SERVER_DOWN:
+                        message = R.string.search_status_down;
+                        break;
+                    case BookService.SEARCH_STATUS_SERVER_INVALID:
+                        message = R.string.search_status_invalid;
+                        break;
+                    case BookService.SEARCH_STATUS_UNKNOWN:
+                        message = R.string.search_status_unknown;
+                        break;
+                    default:
+                        break;
+                }
             }
+            if (message != -1)
+                Toast.makeText(MainActivity.this, getString(message), Toast.LENGTH_LONG).show();
         }
     }
 

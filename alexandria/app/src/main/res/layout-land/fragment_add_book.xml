@@ -80,7 +80,7 @@
             android:layout_alignTop="@+id/bookCover"
             android:layout_marginLeft="25dp"
             android:layout_toRightOf="@+id/bookCover"
-            android:textSize="@dimen/small_fontsize" />
+            android:textSize="@dimen/small_font_size" />
 
         <TextView
             android:id="@+id/categories"
@@ -90,7 +90,7 @@
             android:layout_alignStart="@+id/bookCover"
             android:layout_below="@+id/bookCover"
             android:layout_marginTop="10dp"
-            android:textSize="@dimen/small_fontsize" />
+            android:textSize="@dimen/small_font_size" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:contentDescription="@string/cancel_button"
+                android:contentDescription="@string/delete"
                 android:drawableLeft="@drawable/ic_action_discard"
                 android:drawableStart="@drawable/ic_action_discard"
                 android:text="@string/delete"
