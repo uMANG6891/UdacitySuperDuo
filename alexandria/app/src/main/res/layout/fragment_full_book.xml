@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="it.jaschke.alexandria.AddBook">
 
     <LinearLayout
@@ -16,7 +17,7 @@
             android:fillViewport="false">
 
             <RelativeLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|top"
                 android:orientation="horizontal">
@@ -29,7 +30,10 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_margin="10dp"
+                    android:paddingEnd="20dp"
+                    android:paddingLeft="20dp"
                     android:paddingRight="20dp"
+                    android:paddingStart="20dp"
                     android:textIsSelectable="true"
                     android:textSize="@dimen/head_line"
                     android:textStyle="bold" />
@@ -53,6 +57,8 @@
                     android:layout_alignTop="@+id/fullBookCover"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_toEndOf="@+id/fullBookCover"
                     android:layout_toRightOf="@+id/fullBookCover"
                     android:ellipsize="end"
@@ -67,6 +73,7 @@
                     android:layout_below="@+id/fullBookCover"
                     android:layout_margin="10dp"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:ellipsize="end" />
 
 
@@ -83,14 +90,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="left|top" />
+                        android:gravity="start|top" />
 
                     <TextView
                         android:id="@+id/authors"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="right|top"
+                        android:gravity="end|top"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -102,7 +109,7 @@
                     android:layout_alignEnd="@+id/fullBookTitle"
                     android:layout_alignParentTop="true"
                     android:layout_alignRight="@+id/fullBookTitle"
-                    android:layout_gravity="right|top"
+                    android:layout_gravity="end|top"
                     android:contentDescription="@string/back_button"
                     android:onClick="goBack"
                     android:src="@drawable/ic_action_undo" />
@@ -115,7 +122,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
             android:orientation="horizontal">
 
             <Button
@@ -124,8 +131,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
+                android:drawableStart="@drawable/ic_action_discard"
                 android:drawableLeft="@drawable/ic_action_discard"
+                android:drawableTint="@android:color/black"
                 android:text="@string/delete" />
         </LinearLayout>
 
