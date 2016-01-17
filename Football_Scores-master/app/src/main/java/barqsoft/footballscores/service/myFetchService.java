@@ -28,11 +28,12 @@ import barqsoft.footballscores.R;
 /**
  * Created by yehya khaled on 3/2/2015.
  */
-public class myFetchService extends IntentService {
-    public static final String LOG_TAG = "myFetchService";
+public class MyFetchService extends IntentService {
+    public static final String LOG_TAG = "MyFetchService";
+    public static final String ACTION_DATA_UPDATED = "barqsoft.footballscores.ACTION_DATA_UPDATED";
 
-    public myFetchService() {
-        super("myFetchService");
+    public MyFetchService() {
+        super("MyFetchService");
     }
 
     @Override
@@ -248,12 +249,20 @@ public class myFetchService extends IntentService {
             values.toArray(insert_data);
             inserted_data = mContext.getContentResolver().bulkInsert(
                     DatabaseContract.BASE_CONTENT_URI, insert_data);
+            if (inserted_data > 0) {
+                updateWidgets();
+            }
 
             //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
         }
 
+    }
+
+    private void updateWidgets() {
+        Context context = getBaseContext();
+        context.sendBroadcast(new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName()));
     }
 }
 

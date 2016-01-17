@@ -12,11 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import barqsoft.footballscores.service.myFetchService;
+import barqsoft.footballscores.service.MyFetchService;
 
 /**
- * A placeholder fragment containing a simple view.
+ * A placeholder fragment containing a simple emptyView.
  */
 public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public scoresAdapter mAdapter;
@@ -24,11 +25,13 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     private String[] fragmentdate = new String[1];
     private int last_selected_item = -1;
 
+    TextView tvEmptyList;
+
     public MainScreenFragment() {
     }
 
     private void update_scores() {
-        Intent service_start = new Intent(getActivity(), myFetchService.class);
+        Intent service_start = new Intent(getActivity(), MyFetchService.class);
         getActivity().startService(service_start);
     }
 
@@ -44,6 +47,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new scoresAdapter(getActivity(), null, 0);
         score_list.setAdapter(mAdapter);
+
+        tvEmptyList = (TextView) rootView.findViewById(R.id.empty_text_view);
+        score_list.setEmptyView(tvEmptyList);
+
         getLoaderManager().initLoader(SCORES_LOADER, null, this);
         mAdapter.detail_match_id = MainActivity.selected_match_id;
         score_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -75,6 +82,11 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
             cursor.moveToNext();
         }
         */
+        if (cursor.getCount() == 0) {
+            tvEmptyList.setText(R.string.no_matches_found);
+        } else {
+            tvEmptyList.setText("");
+        }
 
         int i = 0;
         cursor.moveToFirst();
@@ -84,7 +96,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         }
         //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
         mAdapter.swapCursor(cursor);
-        //mAdapter.notifyDataSetChanged();
     }
 
     @Override
