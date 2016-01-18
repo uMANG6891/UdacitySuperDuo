@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.utility.Utility;
+
 /**
  * Created by yehya khaled on 2/26/2015.
  */
-public class scoresAdapter extends CursorAdapter {
+public class ScoresAdapter extends CursorAdapter {
     public static final int COL_HOME = 3;
     public static final int COL_AWAY = 4;
     public static final int COL_HOME_GOALS = 6;
@@ -28,7 +31,7 @@ public class scoresAdapter extends CursorAdapter {
 
     Context context;
 
-    public scoresAdapter(Context context, Cursor cursor, int flags) {
+    public ScoresAdapter(Context context, Cursor cursor, int flags) {
         super(context, cursor, flags);
         this.context = context;
     }

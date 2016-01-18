@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,8 +11,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import barqsoft.footballscores.R;
 import barqsoft.footballscores.service.MyFetchService.ScoreStatus;
-import barqsoft.footballscores.utility.Constants;
 
 /**
  * Created by yehya khaled on 3/3/2015.

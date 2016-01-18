@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.ui.fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,16 +14,23 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.R;
 import barqsoft.footballscores.service.MyFetchService;
+import barqsoft.footballscores.ui.activity.MainActivity;
+import barqsoft.footballscores.ui.adapter.ScoresAdapter;
+import barqsoft.footballscores.ui.adapter.ViewHolder;
+import barqsoft.footballscores.utility.Utility;
 
 /**
  * A placeholder fragment containing a simple emptyView.
  */
 public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    public scoresAdapter mAdapter;
+    public ScoresAdapter mAdapter;
     public static final int SCORES_LOADER = 0;
-    private String[] fragmentDate = new String[1];
-    private int last_selected_item = -1;
+    private String fragmentDate;
+
+    private final String SAVE_STATE_DATE = "save_state_date";
 
     TextView tvEmptyList;
 
@@ -36,7 +43,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     public void setFragmentDate(String date) {
-        fragmentDate[0] = date;
+        fragmentDate = date;
     }
 
     @Override
@@ -45,13 +52,12 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         update_scores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
-        mAdapter = new scoresAdapter(getActivity(), null, 0);
+        mAdapter = new ScoresAdapter(getActivity(), null, 0);
         score_list.setAdapter(mAdapter);
 
         tvEmptyList = (TextView) rootView.findViewById(R.id.empty_text_view);
         score_list.setEmptyView(tvEmptyList);
 
-        getLoaderManager().initLoader(SCORES_LOADER, null, this);
         mAdapter.detail_match_id = MainActivity.selected_match_id;
         score_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -66,9 +72,28 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVE_STATE_DATE, fragmentDate);
+    }
+
+    // getting date value on orientation change if set
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getString(SAVE_STATE_DATE) != null) {
+                fragmentDate = savedInstanceState.getString(SAVE_STATE_DATE);
+            }
+        }
+        getLoaderManager().initLoader(SCORES_LOADER, null, this);
+    }
+
+    //saving the date that this fragment belongs to
+    @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(getActivity(), DatabaseContract.scores_table.buildScoreWithDate(),
-                null, null, fragmentDate, null);
+        return new CursorLoader(getActivity(), DatabaseContract.ScoresTable.buildScoreWithDate(),
+                null, null, new String[]{fragmentDate}, null);
     }
 
     @Override

@@ -1,9 +1,11 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.ui.adapter;
 
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import barqsoft.footballscores.R;
 
 /**
  * Created by yehya khaled on 2/26/2015.

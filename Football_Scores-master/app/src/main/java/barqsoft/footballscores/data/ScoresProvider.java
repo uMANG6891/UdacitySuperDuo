@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -7,6 +7,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+
+import barqsoft.footballscores.DatabaseContract;
 
 /**
  * Created by yehya khaled on 2/25/2015.
@@ -17,14 +20,14 @@ public class ScoresProvider extends ContentProvider {
     private static final int MATCHES_WITH_LEAGUE = 101;
     private static final int MATCHES_WITH_ID = 102;
     private static final int MATCHES_WITH_DATE = 103;
-    private UriMatcher muriMatcher = buildUriMatcher();
+    private UriMatcher mUriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder ScoreQuery =
             new SQLiteQueryBuilder();
-    private static final String SCORES_BY_LEAGUE = DatabaseContract.scores_table.LEAGUE_COL + " = ?";
+    private static final String SCORES_BY_LEAGUE = DatabaseContract.ScoresTable.LEAGUE_COL + " = ?";
     private static final String SCORES_BY_DATE =
-            DatabaseContract.scores_table.DATE_COL + " LIKE ?";
+            DatabaseContract.ScoresTable.DATE_COL + " LIKE ?";
     private static final String SCORES_BY_ID =
-            DatabaseContract.scores_table.MATCH_ID + " = ?";
+            DatabaseContract.ScoresTable.MATCH_ID + " = ?";
 
 
     static UriMatcher buildUriMatcher() {
@@ -42,11 +45,11 @@ public class ScoresProvider extends ContentProvider {
         {
             if (link.contentEquals(DatabaseContract.BASE_CONTENT_URI.toString())) {
                 return MATCHES;
-            } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithDate().toString())) {
+            } else if (link.contentEquals(DatabaseContract.ScoresTable.buildScoreWithDate().toString())) {
                 return MATCHES_WITH_DATE;
-            } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithId().toString())) {
+            } else if (link.contentEquals(DatabaseContract.ScoresTable.buildScoreWithId().toString())) {
                 return MATCHES_WITH_ID;
-            } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithLeague().toString())) {
+            } else if (link.contentEquals(DatabaseContract.ScoresTable.buildScoreWithLeague().toString())) {
                 return MATCHES_WITH_LEAGUE;
             }
         }
@@ -60,22 +63,22 @@ public class ScoresProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
     }
 
     @Override
-    public String getType(Uri uri) {
-        final int match = muriMatcher.match(uri);
+    public String getType(@NonNull Uri uri) {
+        final int match = mUriMatcher.match(uri);
         switch (match) {
             case MATCHES:
-                return DatabaseContract.scores_table.CONTENT_TYPE;
+                return DatabaseContract.ScoresTable.CONTENT_TYPE;
             case MATCHES_WITH_LEAGUE:
-                return DatabaseContract.scores_table.CONTENT_TYPE;
+                return DatabaseContract.ScoresTable.CONTENT_TYPE;
             case MATCHES_WITH_ID:
-                return DatabaseContract.scores_table.CONTENT_ITEM_TYPE;
+                return DatabaseContract.ScoresTable.CONTENT_ITEM_TYPE;
             case MATCHES_WITH_DATE:
-                return DatabaseContract.scores_table.CONTENT_TYPE;
+                return DatabaseContract.ScoresTable.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri :" + uri);
         }
@@ -96,8 +99,6 @@ public class ScoresProvider extends ContentProvider {
                         projection, null, null, null, null, sortOrder);
                 break;
             case MATCHES_WITH_DATE:
-                //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[1]);
-                //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[2]);
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         DatabaseContract.SCORES_TABLE,
                         projection, SCORES_BY_DATE, selectionArgs, null, null, sortOrder);
@@ -115,21 +116,21 @@ public class ScoresProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown Uri" + uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if (getContext() != null)
+            retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
-
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         return null;
     }
 
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         //db.delete(DatabaseContract.SCORES_TABLE,null,null);
-        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(muriMatcher.match(uri)));
+        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(mUriMatcher.match(uri)));
         switch (match_uri(uri)) {
             case MATCHES:
                 db.beginTransaction();
@@ -146,7 +147,8 @@ public class ScoresProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri, null);
+                if (getContext() != null)
+                    getContext().getContentResolver().notifyChange(uri, null);
                 return returncount;
             default:
                 return super.bulkInsert(uri, values);
@@ -154,7 +156,7 @@ public class ScoresProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         return 0;
     }
 }

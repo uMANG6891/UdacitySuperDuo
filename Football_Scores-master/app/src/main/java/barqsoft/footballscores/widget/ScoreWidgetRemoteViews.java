@@ -14,8 +14,7 @@ import java.util.Locale;
 
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.Utility;
-import barqsoft.footballscores.service.MyFetchService;
+import barqsoft.footballscores.utility.Utility;
 
 /**
  * Created by umang on 17/01/16.
@@ -24,15 +23,15 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
 
     public interface ScoreQuery {
         String[] SCORE_PROJECTION = {
-                DatabaseContract.scores_table.LEAGUE_COL,
-                DatabaseContract.scores_table.DATE_COL,
-                DatabaseContract.scores_table.TIME_COL,
-                DatabaseContract.scores_table.HOME_COL,
-                DatabaseContract.scores_table.AWAY_COL,
-                DatabaseContract.scores_table.HOME_GOALS_COL,
-                DatabaseContract.scores_table.AWAY_GOALS_COL,
-                DatabaseContract.scores_table.MATCH_ID,
-                DatabaseContract.scores_table.MATCH_DAY
+                DatabaseContract.ScoresTable.LEAGUE_COL,
+                DatabaseContract.ScoresTable.DATE_COL,
+                DatabaseContract.ScoresTable.TIME_COL,
+                DatabaseContract.ScoresTable.HOME_COL,
+                DatabaseContract.ScoresTable.AWAY_COL,
+                DatabaseContract.ScoresTable.HOME_GOALS_COL,
+                DatabaseContract.ScoresTable.AWAY_GOALS_COL,
+                DatabaseContract.ScoresTable.MATCH_ID,
+                DatabaseContract.ScoresTable.MATCH_DAY
         };
         int COL_LEAGUE = 0;
         int COL_DATE = 1;
@@ -57,7 +56,7 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
 
             @Override
             public void onDataSetChanged() {
-                Uri uri = DatabaseContract.scores_table.buildScoreWithDate();
+                Uri uri = DatabaseContract.ScoresTable.buildScoreWithDate();
                 String formatString = getString(R.string.date_format_ymd);
                 SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.US);
                 String todayDate = format.format(new Date());

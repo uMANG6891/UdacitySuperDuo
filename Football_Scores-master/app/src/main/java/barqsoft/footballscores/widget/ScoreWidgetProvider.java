@@ -8,9 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.service.MyFetchService;
+import barqsoft.footballscores.ui.activity.MainActivity;
 
 /**
  * Created by umang on 17/01/16.
