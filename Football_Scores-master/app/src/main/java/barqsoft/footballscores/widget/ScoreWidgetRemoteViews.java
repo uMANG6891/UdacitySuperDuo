@@ -15,6 +15,7 @@ import java.util.Locale;
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.Utility;
+import barqsoft.footballscores.service.MyFetchService;
 
 /**
  * Created by umang on 17/01/16.
@@ -91,7 +92,6 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
                     return null;
                 }
                 final RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_item_layout);
-
                 views.setTextViewText(R.id.home_name, cursor.getString(ScoreQuery.COL_HOME));
                 views.setTextViewText(R.id.away_name, cursor.getString(ScoreQuery.COL_AWAY));
                 views.setTextViewText(R.id.data_textview, cursor.getString(ScoreQuery.COL_MATCHTIME));

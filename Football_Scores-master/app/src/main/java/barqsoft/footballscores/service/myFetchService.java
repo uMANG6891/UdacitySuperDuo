@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.IntDef;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -15,6 +16,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -24,6 +27,7 @@ import java.util.Vector;
 
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.Utility;
 
 /**
  * Created by yehya khaled on 3/2/2015.
@@ -40,8 +44,6 @@ public class MyFetchService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         getData("n2");
         getData("p2");
-
-        return;
     }
 
     private void getData(String timeFrame) {
@@ -69,6 +71,7 @@ public class MyFetchService extends IntentService {
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
+                Utility.setScoreStatus(getBaseContext(), SCORE_STATUS_UNKNOWN);
                 return;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -82,11 +85,13 @@ public class MyFetchService extends IntentService {
             }
             if (buffer.length() == 0) {
                 // Stream was empty.  No point in parsing.
+                Utility.setScoreStatus(getBaseContext(), SCORE_STATUS_SERVER_DOWN);
                 return;
             }
             JSON_data = buffer.toString();
         } catch (Exception e) {
             Log.e(LOG_TAG, "Exception here" + e.getMessage());
+            Utility.setScoreStatus(getBaseContext(), SCORE_STATUS_SERVER_INVALID);
         } finally {
             if (m_connection != null) {
                 m_connection.disconnect();
@@ -106,12 +111,12 @@ public class MyFetchService extends IntentService {
                 if (matches.length() == 0) {
                     //if there is no data, call the function on dummy data
                     //this is expected behavior during the off season.
-                    processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
+//                    processJSONData(getString(R.string.dummy_data), getApplicationContext(), false);
                     return;
                 }
 
 
-                processJSONdata(JSON_data, getApplicationContext(), true);
+                processJSONData(JSON_data, getApplicationContext(), true);
             } else {
                 //Could not Connect
                 Log.d(LOG_TAG, "Could not connect to server.");
@@ -121,7 +126,7 @@ public class MyFetchService extends IntentService {
         }
     }
 
-    private void processJSONdata(String JSONdata, Context mContext, boolean isReal) {
+    private void processJSONData(String JSON_data, Context mContext, boolean isReal) {
         //JSON data
         // This set of league codes is for the 2015/2016 season. In fall of 2016, they will need to
         // be updated. Feel free to use the codes
@@ -165,11 +170,11 @@ public class MyFetchService extends IntentService {
 
 
         try {
-            JSONArray matches = new JSONObject(JSONdata).getJSONArray(FIXTURES);
+            JSONArray matches = new JSONObject(JSON_data).getJSONArray(FIXTURES);
 
 
             //ContentValues to be inserted
-            Vector<ContentValues> values = new Vector<ContentValues>(matches.length());
+            Vector<ContentValues> values = new Vector<>(matches.length());
             for (int i = 0; i < matches.length(); i++) {
 
                 JSONObject match_data = matches.getJSONObject(i);
@@ -252,10 +257,12 @@ public class MyFetchService extends IntentService {
             if (inserted_data > 0) {
                 updateWidgets();
             }
+            Utility.setScoreStatus(getBaseContext(), SCORE_STATUS_OK);
 
-            //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
+            //Log.v(LOG_TAG,"Successfully Inserted : " + String.valueOf(inserted_data));
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
+            Utility.setScoreStatus(getBaseContext(), SCORE_STATUS_SERVER_DOWN);
         }
 
     }
@@ -264,5 +271,15 @@ public class MyFetchService extends IntentService {
         Context context = getBaseContext();
         context.sendBroadcast(new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName()));
     }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({SCORE_STATUS_OK, SCORE_STATUS_SERVER_DOWN, SCORE_STATUS_SERVER_INVALID, SCORE_STATUS_UNKNOWN})
+    public @interface ScoreStatus {
+    }
+
+    public static final int SCORE_STATUS_OK = 0;
+    public static final int SCORE_STATUS_SERVER_DOWN = 1;
+    public static final int SCORE_STATUS_SERVER_INVALID = 2;
+    public static final int SCORE_STATUS_UNKNOWN = 3;
 }
 

@@ -1,12 +1,18 @@
 package barqsoft.footballscores;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import barqsoft.footballscores.service.MyFetchService.ScoreStatus;
+import barqsoft.footballscores.utility.Constants;
 
 /**
  * Created by yehya khaled on 3/3/2015.
@@ -127,5 +133,26 @@ public class Utility {
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
             return dayFormat.format(dateInMillis);
         }
+    }
+
+    public static void setScoreStatus(Context c, @ScoreStatus int locationStatus) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(Constants.PREF_SCORE_STATUS, locationStatus);
+        spe.commit();
+    }
+
+    @SuppressWarnings("ResourceType")
+    public static
+    @ScoreStatus
+    int getScoreStatus(Context c) {
+        return PreferenceManager.getDefaultSharedPreferences(c).getInt(Constants.PREF_SCORE_STATUS, 0);
+    }
+
+    static public boolean isNetworkAvailable(Context c) {
+        ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

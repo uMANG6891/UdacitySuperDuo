@@ -22,7 +22,7 @@ import barqsoft.footballscores.service.MyFetchService;
 public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public scoresAdapter mAdapter;
     public static final int SCORES_LOADER = 0;
-    private String[] fragmentdate = new String[1];
+    private String[] fragmentDate = new String[1];
     private int last_selected_item = -1;
 
     TextView tvEmptyList;
@@ -36,7 +36,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     public void setFragmentDate(String date) {
-        fragmentdate[0] = date;
+        fragmentDate[0] = date;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(getActivity(), DatabaseContract.scores_table.buildScoreWithDate(),
-                null, null, fragmentdate, null);
+                null, null, fragmentDate, null);
     }
 
     @Override
@@ -82,26 +82,35 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
             cursor.moveToNext();
         }
         */
-        if (cursor.getCount() == 0) {
-            tvEmptyList.setText(R.string.no_matches_found);
+
+        if (cursor == null || cursor.getCount() == 0) {
+            if (!Utility.isNetworkAvailable(getContext()))
+                tvEmptyList.setText(R.string.no_matches_found_no_internet);
+            else {
+                switch (Utility.getScoreStatus(getContext())) {
+                    case MyFetchService.SCORE_STATUS_OK:
+                        tvEmptyList.setText(R.string.no_matches_found_status_ok);
+                        break;
+                    case MyFetchService.SCORE_STATUS_SERVER_DOWN:
+                        tvEmptyList.setText(R.string.no_matches_found_status_server_down);
+                        break;
+                    case MyFetchService.SCORE_STATUS_SERVER_INVALID:
+                        tvEmptyList.setText(R.string.no_matches_found_status_server_invalid);
+                        break;
+                    case MyFetchService.SCORE_STATUS_UNKNOWN:
+                        tvEmptyList.setText(R.string.no_matches_found_status_server_unknown);
+                        break;
+                }
+            }
         } else {
             tvEmptyList.setText("");
+            mAdapter.swapCursor(cursor);
         }
 
-        int i = 0;
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            i++;
-            cursor.moveToNext();
-        }
-        //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
-        mAdapter.swapCursor(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mAdapter.swapCursor(null);
     }
-
-
 }
