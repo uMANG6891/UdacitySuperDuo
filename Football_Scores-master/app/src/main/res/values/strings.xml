@@ -43,4 +43,5 @@
 
     <string name="title_widget_scores">Today\'s Scores</string>
     <string name="date_format_ymd">yyyy-MM-dd</string>
+    <string name="score_title">%1$s versus %2$s at %3$s, %4$s. The game result is %5$s %1$s and %6$s %2$s.</string>
 </resources>

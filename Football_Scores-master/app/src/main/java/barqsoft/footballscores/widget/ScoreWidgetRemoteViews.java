@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -91,15 +90,33 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
                 if (position == AdapterView.INVALID_POSITION || cursor == null || !cursor.moveToPosition(position)) {
                     return null;
                 }
-                Log.e("position", position + ":");
                 final RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_item_layout);
+
                 views.setTextViewText(R.id.home_name, cursor.getString(ScoreQuery.COL_HOME));
                 views.setTextViewText(R.id.away_name, cursor.getString(ScoreQuery.COL_AWAY));
                 views.setTextViewText(R.id.data_textview, cursor.getString(ScoreQuery.COL_MATCHTIME));
-                views.setTextViewText(R.id.score_textview, Utility.getScores(cursor.getInt(ScoreQuery.COL_HOME_GOALS), cursor.getInt(ScoreQuery.COL_AWAY_GOALS)));
+                views.setTextViewText(R.id.score_textview,
+                        Utility.getScores(
+                                cursor.getInt(ScoreQuery.COL_HOME_GOALS),
+                                cursor.getInt(ScoreQuery.COL_AWAY_GOALS)));
 //                mHolder.match_id = cursor.getDouble(COL_ID);
                 views.setImageViewResource(R.id.home_crest, Utility.getTeamCrestByTeamName(cursor.getString(ScoreQuery.COL_HOME)));
                 views.setImageViewResource(R.id.away_crest, Utility.getTeamCrestByTeamName(cursor.getString(ScoreQuery.COL_AWAY)));
+
+
+                views.setContentDescription(R.id.widget_item_main,
+                        getString(R.string.score_title,
+                                cursor.getString(ScoreQuery.COL_HOME),
+                                cursor.getString(ScoreQuery.COL_AWAY),
+                                cursor.getString(ScoreQuery.COL_MATCHTIME),
+                                Utility.getDayName(getBaseContext(), System.currentTimeMillis()),
+                                cursor.getInt(ScoreQuery.COL_HOME_GOALS) < 0 ? 0 : cursor.getInt(ScoreQuery.COL_HOME_GOALS),
+                                cursor.getInt(ScoreQuery.COL_AWAY_GOALS) < 0 ? 0 : cursor.getInt(ScoreQuery.COL_AWAY_GOALS)));
+
+                views.setContentDescription(R.id.home_name, null);
+                views.setContentDescription(R.id.away_name, null);
+                views.setContentDescription(R.id.data_textview, null);
+                views.setContentDescription(R.id.score_textview, null);
                 return views;
             }
 

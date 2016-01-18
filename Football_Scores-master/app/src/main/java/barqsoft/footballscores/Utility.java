@@ -1,5 +1,13 @@
 package barqsoft.footballscores;
 
+import android.content.Context;
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by yehya khaled on 3/3/2015.
  */
@@ -9,6 +17,8 @@ public class Utility {
     public static final int CHAMPIONS_LEAGUE = 362;
     public static final int PRIMERA_DIVISION = 358;
     public static final int BUNDESLIGA = 351;
+
+    public static final String DEFAULT_DATE_FORMAT = "yyyyMMdd";
 
     public static String getLeague(int league_num) {
         switch (league_num) {
@@ -45,11 +55,11 @@ public class Utility {
         }
     }
 
-    public static String getScores(int home_goals, int awaygoals) {
-        if (home_goals < 0 || awaygoals < 0) {
+    public static String getScores(int homeGoals, int awayGoals) {
+        if (homeGoals < 0 || awayGoals < 0) {
             return " - ";
         } else {
-            return String.valueOf(home_goals) + " - " + String.valueOf(awaygoals);
+            return String.valueOf(homeGoals) + " - " + String.valueOf(awayGoals);
         }
     }
 
@@ -81,6 +91,41 @@ public class Utility {
                 return R.drawable.stoke_city;
             default:
                 return R.drawable.no_icon;
+        }
+    }
+
+    public static String getDateString(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        return sdf.format(date);
+    }
+
+
+    public static String getDayName(Context context, long dateInMillis) {
+        // If the date is today, return the localized version of "Today" instead of the actual
+        // day name.
+
+        Date todayDate = new Date();
+        String inputStr = getDateString(new Date(dateInMillis));
+        String todayStr = getDateString(todayDate);
+
+        Calendar calTomorrow = Calendar.getInstance(),
+                calYesterday = Calendar.getInstance();
+
+        calTomorrow.setTime(todayDate);
+        calYesterday.setTime(todayDate);
+
+        calTomorrow.add(Calendar.DATE, 1);
+        calYesterday.add(Calendar.DATE, -1);
+
+        if (inputStr.equals(todayStr)) {
+            return context.getString(R.string.today);
+        } else if (inputStr.equals(getDateString(calTomorrow.getTime()))) {
+            return context.getString(R.string.tomorrow);
+        } else if (inputStr.equals(getDateString(calYesterday.getTime()))) {
+            return context.getString(R.string.yesterday);
+        } else {
+            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
+            return dayFormat.format(dateInMillis);
         }
     }
 }
