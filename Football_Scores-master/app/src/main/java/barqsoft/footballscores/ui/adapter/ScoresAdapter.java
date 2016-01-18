@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.ui.activity.MainActivity;
 import barqsoft.footballscores.utility.Utility;
 
 /**
@@ -30,10 +32,13 @@ public class ScoresAdapter extends CursorAdapter {
     private String FOOTBALL_SCORES_HASHTAG = "#Football_Scores";
 
     Context context;
+    LayoutInflater layoutInflater;
 
     public ScoresAdapter(Context context, Cursor cursor, int flags) {
         super(context, cursor, flags);
         this.context = context;
+        layoutInflater = (LayoutInflater) context.getApplicationContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -72,15 +77,12 @@ public class ScoresAdapter extends CursorAdapter {
 
         //Log.v(FetchScoreTask.LOG_TAG,mHolder.home_name.getText() + " Vs. " + mHolder.away_name.getText() +" id " + String.valueOf(mHolder.match_id));
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(detail_match_id));
-        LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = vi.inflate(R.layout.detail_fragment, null);
+
         ViewGroup container = (ViewGroup) view.findViewById(R.id.details_fragment_container);
+        container.removeAllViews();
         if (mHolder.match_id == detail_match_id) {
             //Log.v(FetchScoreTask.LOG_TAG,"will insert extraView");
-
-            container.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
-                    , ViewGroup.LayoutParams.MATCH_PARENT));
+            View v = layoutInflater.inflate(R.layout.detail_fragment, container, false);
             TextView match_day = (TextView) v.findViewById(R.id.matchday_textview);
             match_day.setText(Utility.getMatchDay(cursor.getInt(COL_MATCH_DAY),
                     cursor.getInt(COL_LEAGUE)));
@@ -94,9 +96,23 @@ public class ScoresAdapter extends CursorAdapter {
                             + mHolder.score.getText() + " " + mHolder.away_name.getText() + " "));
                 }
             });
-        } else {
-            container.removeAllViews();
+            container.addView(v);
         }
+
+        mHolder.cvMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewHolder selected = (ViewHolder) v.getTag();
+                if (detail_match_id == selected.match_id) {
+                    detail_match_id = 0;
+                    MainActivity.selected_match_id = 0;
+                } else {
+                    detail_match_id = selected.match_id;
+                    MainActivity.selected_match_id = (int) selected.match_id;
+                }
+                notifyDataSetChanged();
+            }
+        });
 
     }
 

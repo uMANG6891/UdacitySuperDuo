@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,7 +18,6 @@ import barqsoft.footballscores.R;
 import barqsoft.footballscores.service.MyFetchService;
 import barqsoft.footballscores.ui.activity.MainActivity;
 import barqsoft.footballscores.ui.adapter.ScoresAdapter;
-import barqsoft.footballscores.ui.adapter.ViewHolder;
 import barqsoft.footballscores.utility.Utility;
 
 /**
@@ -59,15 +57,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         score_list.setEmptyView(tvEmptyList);
 
         mAdapter.detail_match_id = MainActivity.selected_match_id;
-        score_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ViewHolder selected = (ViewHolder) view.getTag();
-                mAdapter.detail_match_id = selected.match_id;
-                MainActivity.selected_match_id = (int) selected.match_id;
-                mAdapter.notifyDataSetChanged();
-            }
-        });
         return rootView;
     }
 
