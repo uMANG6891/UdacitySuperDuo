@@ -25,7 +25,6 @@
         <item name="android:layout_height">@dimen/crest_height</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:adjustViewBounds">true</item>
-        <item name="android:src">@drawable/ic_launcher</item>
         <item name="android:contentDescription">@null</item>
         <item name="android:maxWidth">@dimen/crest_width</item>
         <item name="android:maxHeight">@dimen/crest_height</item>
