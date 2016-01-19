@@ -22,15 +22,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import it.jaschke.alexandria.MainActivity;
 import it.jaschke.alexandria.data.AlexandriaContract;
+import it.jaschke.alexandria.ui.activity.MainActivity;
 import it.jaschke.alexandria.utility.Utility;
 
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
- * <p/>
+ * <p>
  */
 public class BookService extends IntentService {
 

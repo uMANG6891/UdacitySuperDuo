@@ -1,4 +1,4 @@
-package it.jaschke.alexandria;
+package it.jaschke.alexandria.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +25,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
 
@@ -201,7 +202,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        getActivity().setTitle(R.string.scan);
+        getActivity().setTitle(R.string.menu_scan);
     }
 
     @Override

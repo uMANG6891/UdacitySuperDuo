@@ -1,4 +1,4 @@
-package it.jaschke.alexandria;
+package it.jaschke.alexandria.ui.activity;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -6,6 +6,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import it.jaschke.alexandria.R;
 
 /**
  * Created by saj on 27/01/15.

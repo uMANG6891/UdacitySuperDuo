@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="ic_menu_library" type="drawable">@android:drawable/ic_menu_sort_by_size</item>
+    <item name="ic_menu_library_add" type="drawable">@android:drawable/ic_input_add</item>
+    <item name="ic_menu_about" type="drawable">@android:drawable/ic_menu_info_details</item>
+    <item name="ic_menu_settings" type="drawable">@android:drawable/ic_menu_preferences</item>
+</resources>

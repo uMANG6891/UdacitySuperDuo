@@ -7,7 +7,7 @@
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
     android:theme="@style/AppTheme.AppBarOverlay"
+    app:elevation="4dp"
     app:navigationContentDescription="@string/abc_action_bar_up_description"
     app:navigationIcon="?attr/homeAsUpIndicator"
-    app:title="@string/action_settings"
-    app:elevation="4dp" />
+    app:title="@string/menu_settings" />

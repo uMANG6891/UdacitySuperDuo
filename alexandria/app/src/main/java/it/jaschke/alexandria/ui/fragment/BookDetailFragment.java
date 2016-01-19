@@ -1,4 +1,4 @@
-package it.jaschke.alexandria;
+package it.jaschke.alexandria.ui.fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,12 +21,15 @@ import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
+import it.jaschke.alexandria.ui.activity.BookDetailActivity;
+import it.jaschke.alexandria.ui.activity.MainActivity;
 import it.jaschke.alexandria.utility.Utility;
 
 
-public class BookDetail extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+public class BookDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
     @Bind(R.id.fullBookTitle)
     TextView tvFullBookTitle;
@@ -44,19 +45,18 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     @Bind(R.id.fullBookCover)
     ImageView ivFullBookCover;
 
-    @Bind(R.id.backButton)
-    ImageButton ibBack;
-
     @Bind(R.id.delete_button)
     Button bDelete;
 
-    public static final String EAN_KEY = "EAN";
     private final int LOADER_ID = 10;
     private View rootView;
-    private String ean;
+
+    private String eanBookId;
+    private boolean eanIsTablet;
+
     private String bookTitle;
 
-    public BookDetail() {
+    public BookDetailFragment() {
     }
 
     @Override
@@ -70,7 +70,8 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            ean = arguments.getString(BookDetail.EAN_KEY);
+            eanBookId = arguments.getString(BookDetailActivity.EAN_BOOK_ID);
+            eanIsTablet = arguments.getBoolean(BookDetailActivity.EAN_IS_TABLET);
             getLoaderManager().restartLoader(LOADER_ID, null, this);
         }
         rootView = inflater.inflate(R.layout.fragment_full_book, container, false);
@@ -101,7 +102,7 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(
                 getActivity(),
-                AlexandriaContract.BookEntry.buildFullBookUri(Long.parseLong(ean)),
+                AlexandriaContract.BookEntry.buildFullBookUri(Long.parseLong(eanBookId)),
                 null,
                 null,
                 null,
@@ -117,6 +118,9 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
         bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
         tvFullBookTitle.setText(bookTitle);
+        if (!eanIsTablet) {
+            getActivity().setTitle(bookTitle);
+        }
 
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
         tvFullBookSubTitle.setText(bookSubTitle);
@@ -138,11 +142,6 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
         String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
         tvCategories.setText(categories);
-
-        if (rootView.findViewById(R.id.right_container) != null) {
-            ibBack.setVisibility(View.INVISIBLE);
-        }
-
     }
 
     @Override
@@ -163,10 +162,13 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         switch (v.getId()) {
             case R.id.delete_button:
                 Intent bookIntent = new Intent(getActivity(), BookService.class);
-                bookIntent.putExtra(BookService.EAN, ean);
+                bookIntent.putExtra(BookService.EAN, eanBookId);
                 bookIntent.setAction(BookService.DELETE_BOOK);
                 getActivity().startService(bookIntent);
-                getActivity().getSupportFragmentManager().popBackStack();
+                if (eanIsTablet)
+                    getActivity().getSupportFragmentManager().popBackStack();
+                else
+                    getActivity().finish();
                 break;
             default:
                 break;
