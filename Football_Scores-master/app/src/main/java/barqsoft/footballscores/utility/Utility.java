@@ -16,6 +16,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -122,6 +123,18 @@ public class Utility {
         return sdf.format(date);
     }
 
+
+    public static String getDayName(Context context, String dateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        try {
+            Date date = sdf.parse(dateString);
+            return getDayName(context, date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.e("error", e.getLocalizedMessage());
+        }
+        return null;
+    }
 
     public static String getDayName(Context context, long dateInMillis) {
         // If the date is today, return the localized version of "Today" instead of the actual

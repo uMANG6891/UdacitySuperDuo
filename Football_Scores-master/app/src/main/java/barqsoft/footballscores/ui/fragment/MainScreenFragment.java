@@ -27,7 +27,7 @@ import barqsoft.footballscores.utility.Utility;
 public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public ScoresAdapter mAdapter;
     public static final int SCORES_LOADER = 0;
-    private String fragmentDate;
+    public String fragmentDate;
 
     private final String SAVE_STATE_DATE = "save_state_date";
 

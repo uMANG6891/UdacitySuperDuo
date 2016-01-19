@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.ui.activity.MainActivity;
+import barqsoft.footballscores.ui.fragment.MainScreenFragment;
 import barqsoft.footballscores.utility.Constants;
 import barqsoft.footballscores.utility.Utility;
 
@@ -73,7 +74,7 @@ public class ScoresAdapter extends CursorAdapter {
                         cursor.getString(Constants.COL_HOME),
                         cursor.getString(Constants.COL_AWAY),
                         cursor.getString(Constants.COL_MATCH_TIME),
-                        Utility.getDayName(context, System.currentTimeMillis() + ((cursor.getPosition() - 2) * 86400000)),
+                        Utility.getDayName(context, cursor.getString(Constants.COL_DATE)),
                         cursor.getInt(Constants.COL_HOME_GOALS) < 0 ? 0 : cursor.getInt(Constants.COL_HOME_GOALS),
                         cursor.getInt(Constants.COL_AWAY_GOALS) < 0 ? 0 : cursor.getInt(Constants.COL_AWAY_GOALS))
         );
