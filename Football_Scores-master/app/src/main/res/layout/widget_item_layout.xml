@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_item_main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/widget_item_main"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/card_view_padding"
+    android:paddingTop="@dimen/card_view_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,9 +21,7 @@
 
             <ImageView
                 android:id="@+id/home_crest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                style="@style/CrestImageView" />
 
             <TextView
                 android:id="@+id/home_name"
@@ -43,9 +43,8 @@
             <TextView
                 android:id="@+id/score_textview"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/test_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -54,9 +53,8 @@
             <TextView
                 android:id="@+id/data_textview"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/test_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
@@ -72,9 +70,7 @@
 
             <ImageView
                 android:id="@+id/away_crest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                style="@style/CrestImageView" />
 
             <TextView
                 android:id="@+id/away_name"
@@ -87,9 +83,4 @@
                 android:textColor="@android:color/black" />
         </LinearLayout>
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/details_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </LinearLayout>

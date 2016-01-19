@@ -1,7 +1,9 @@
 package barqsoft.footballscores.widget;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Binder;
 import android.widget.AdapterView;
@@ -12,8 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.data.DatabaseContract;
+import barqsoft.footballscores.utility.Constants;
 import barqsoft.footballscores.utility.Utility;
 
 /**
@@ -21,37 +24,15 @@ import barqsoft.footballscores.utility.Utility;
  */
 public class ScoreWidgetRemoteViews extends RemoteViewsService {
 
-    public interface ScoreQuery {
-        String[] SCORE_PROJECTION = {
-                DatabaseContract.ScoresTable.LEAGUE_COL,
-                DatabaseContract.ScoresTable.DATE_COL,
-                DatabaseContract.ScoresTable.TIME_COL,
-                DatabaseContract.ScoresTable.HOME_COL,
-                DatabaseContract.ScoresTable.AWAY_COL,
-                DatabaseContract.ScoresTable.HOME_GOALS_COL,
-                DatabaseContract.ScoresTable.AWAY_GOALS_COL,
-                DatabaseContract.ScoresTable.MATCH_ID,
-                DatabaseContract.ScoresTable.MATCH_DAY
-        };
-        int COL_LEAGUE = 0;
-        int COL_DATE = 1;
-        int COL_MATCHTIME = 2;
-        int COL_HOME = 3;
-        int COL_AWAY = 4;
-        int COL_HOME_GOALS = 5;
-        int COL_AWAY_GOALS = 6;
-        int COL_MATCH_ID = 7;
-        int COL_MATCH_DAY = 8;
-    }
-
-
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new RemoteViewsFactory() {
             Cursor cursor = null;
+            Context context;
 
             @Override
             public void onCreate() {
+                context = getBaseContext();
             }
 
             @Override
@@ -64,7 +45,7 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
                 final long token = Binder.clearCallingIdentity();
                 try {
                     cursor = getContentResolver().query(uri,
-                            ScoreQuery.SCORE_PROJECTION,
+                            Constants.SCORE_PROJECTION,
                             null,
                             new String[]{todayDate},
                             null);
@@ -91,26 +72,33 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
                     return null;
                 }
                 final RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_item_layout);
-                views.setTextViewText(R.id.home_name, cursor.getString(ScoreQuery.COL_HOME));
-                views.setTextViewText(R.id.away_name, cursor.getString(ScoreQuery.COL_AWAY));
-                views.setTextViewText(R.id.data_textview, cursor.getString(ScoreQuery.COL_MATCHTIME));
+                views.setTextViewText(R.id.home_name, cursor.getString(Constants.COL_HOME));
+                views.setTextViewText(R.id.away_name, cursor.getString(Constants.COL_AWAY));
+                views.setTextViewText(R.id.data_textview, cursor.getString(Constants.COL_MATCH_TIME));
                 views.setTextViewText(R.id.score_textview,
                         Utility.getScores(
-                                cursor.getInt(ScoreQuery.COL_HOME_GOALS),
-                                cursor.getInt(ScoreQuery.COL_AWAY_GOALS)));
-//                mHolder.match_id = cursor.getDouble(COL_ID);
-                views.setImageViewResource(R.id.home_crest, Utility.getTeamCrestByTeamName(cursor.getString(ScoreQuery.COL_HOME)));
-                views.setImageViewResource(R.id.away_crest, Utility.getTeamCrestByTeamName(cursor.getString(ScoreQuery.COL_AWAY)));
+                                cursor.getInt(Constants.COL_HOME_GOALS),
+                                cursor.getInt(Constants.COL_AWAY_GOALS)));
 
+                views.setImageViewResource(R.id.home_crest, R.drawable.no_icon);
+                views.setImageViewResource(R.id.away_crest, R.drawable.no_icon);
+                Bitmap image = Utility.getImageBitmapFromUrl(context, cursor.getString(Constants.COL_HOME_IMAGE_URL));
+                if (image != null) {
+                    views.setImageViewBitmap(R.id.home_crest, image);
+                }
+                image = Utility.getImageBitmapFromUrl(context, cursor.getString(Constants.COL_AWAY_IMAGE_URL));
+                if (image != null) {
+                    views.setImageViewBitmap(R.id.away_crest, image);
+                }
 
                 views.setContentDescription(R.id.widget_item_main,
                         getString(R.string.score_title,
-                                cursor.getString(ScoreQuery.COL_HOME),
-                                cursor.getString(ScoreQuery.COL_AWAY),
-                                cursor.getString(ScoreQuery.COL_MATCHTIME),
+                                cursor.getString(Constants.COL_HOME),
+                                cursor.getString(Constants.COL_AWAY),
+                                cursor.getString(Constants.COL_MATCH_TIME),
                                 Utility.getDayName(getBaseContext(), System.currentTimeMillis()),
-                                cursor.getInt(ScoreQuery.COL_HOME_GOALS) < 0 ? 0 : cursor.getInt(ScoreQuery.COL_HOME_GOALS),
-                                cursor.getInt(ScoreQuery.COL_AWAY_GOALS) < 0 ? 0 : cursor.getInt(ScoreQuery.COL_AWAY_GOALS)));
+                                cursor.getInt(Constants.COL_HOME_GOALS) < 0 ? 0 : cursor.getInt(Constants.COL_HOME_GOALS),
+                                cursor.getInt(Constants.COL_AWAY_GOALS) < 0 ? 0 : cursor.getInt(Constants.COL_AWAY_GOALS)));
 
                 views.setContentDescription(R.id.home_name, null);
                 views.setContentDescription(R.id.away_name, null);
@@ -132,7 +120,7 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
             @Override
             public long getItemId(int position) {
                 if (cursor.moveToPosition(position))
-                    return cursor.getLong(ScoreQuery.COL_MATCH_ID);
+                    return cursor.getLong(Constants.COL__ID);
                 return position;
             }
 

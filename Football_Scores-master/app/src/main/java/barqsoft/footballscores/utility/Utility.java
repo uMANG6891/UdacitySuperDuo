@@ -1,18 +1,35 @@
 package barqsoft.footballscores.utility;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.ImageView;
+
+import com.koushikdutta.ion.Ion;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.data.DatabaseContract;
+import barqsoft.footballscores.data.DatabaseContract.ScoresTable;
+import barqsoft.footballscores.data.ScoreHttpClient;
 import barqsoft.footballscores.service.MyFetchService.ScoreStatus;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by yehya khaled on 3/3/2015.
@@ -101,7 +118,7 @@ public class Utility {
     }
 
     public static String getDateString(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_FORMAT, Locale.US);
         return sdf.format(date);
     }
 
@@ -139,7 +156,7 @@ public class Utility {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(Constants.PREF_SCORE_STATUS, locationStatus);
-        spe.commit();
+        spe.apply();
     }
 
     @SuppressWarnings("ResourceType")
@@ -154,5 +171,104 @@ public class Utility {
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+
+    public static void getImageUrl(final Context context, final String homeOrAway, final ImageView ivCrest, String url, final String _id) {
+        ScoreHttpClient client = new ScoreHttpClient(context);
+        client.get(url, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        String crestUrl = null;
+                        if (responseBody != null)
+                            crestUrl = getCrestUrl(new String(responseBody));
+                        if (crestUrl != null) {
+                            // replace svg url with png if found
+                            if (crestUrl.endsWith(".svg")) {
+                                String join = getSeparatorString(crestUrl);
+                                if (join != null) {
+                                    String[] a = crestUrl.split(join);
+                                    String[] b = crestUrl.split("/");
+                                    crestUrl = a[0] + join + "thumb/" + a[1] + "/100px-" + b[b.length - 1] + ".png";
+                                }
+                            }
+                        }
+                        Log.e("url", crestUrl + ":");
+
+                        // load image to imageView
+                        if (crestUrl != null)
+                            loadImage(context, ivCrest, crestUrl);
+                        else
+                            loadImageWithError(ivCrest);
+
+                        // save image url to database
+                        ContentValues values = new ContentValues();
+                        if (homeOrAway.equals(Constants.HOME))
+                            values.put(ScoresTable.HOME_IMAGE_URL_COL, crestUrl);
+                        else if (homeOrAway.equals(Constants.AWAY))
+                            values.put(ScoresTable.AWAY_IMAGE_URL_COL, crestUrl);
+                        if (values.size() > 0)
+                            context.getContentResolver().update(DatabaseContract.BASE_CONTENT_URI,
+                                    values,
+                                    ScoresTable._ID + " = ?",
+                                    new String[]{_id});
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable
+                            error) {
+                        loadImageWithError(ivCrest);
+                    }
+                }
+
+        );
+    }
+
+    public static void loadImage(Context context, ImageView ivCrest, String crestUrl) {
+        Ion.with(context)
+                .load(crestUrl)
+                .withBitmap()
+                .placeholder(R.drawable.ic_launcher)
+                .error(R.drawable.no_icon)
+                .intoImageView(ivCrest);
+    }
+
+    private static void loadImageWithError(ImageView crest) {
+        crest.setImageResource(R.drawable.no_icon);
+    }
+
+    private static String getCrestUrl(String s) {
+        try {
+            JSONObject jo = new JSONObject(s);
+            return jo.getString("crestUrl");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static String getSeparatorString(String url) {
+        String pattern = "(/wikipedia/../)";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(url);
+        if (m.find()) {
+            return m.group(0);
+        } else {
+            return null;
+        }
+    }
+
+    public static Bitmap getImageBitmapFromUrl(Context context, String url) {
+        if (url != null && url.length() != 0) try {
+            return Ion.with(context)
+                    .load(url)
+                    .withBitmap()
+                    .asBitmap()
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
     }
 }

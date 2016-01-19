@@ -13,11 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.data.DatabaseContract.ScoresTable;
 import barqsoft.footballscores.service.MyFetchService;
 import barqsoft.footballscores.ui.activity.MainActivity;
 import barqsoft.footballscores.ui.adapter.ScoresAdapter;
+import barqsoft.footballscores.utility.Constants;
 import barqsoft.footballscores.utility.Utility;
 
 /**
@@ -35,11 +36,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public MainScreenFragment() {
     }
 
-    private void update_scores() {
-        Intent service_start = new Intent(getActivity(), MyFetchService.class);
-        getActivity().startService(service_start);
-    }
-
     public void setFragmentDate(String date) {
         fragmentDate = date;
     }
@@ -47,16 +43,16 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        update_scores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
+        mAdapter.detail_match_id = MainActivity.selected_match_id;
+
         score_list.setAdapter(mAdapter);
 
         tvEmptyList = (TextView) rootView.findViewById(R.id.empty_text_view);
         score_list.setEmptyView(tvEmptyList);
 
-        mAdapter.detail_match_id = MainActivity.selected_match_id;
         return rootView;
     }
 
@@ -81,8 +77,8 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     //saving the date that this fragment belongs to
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(getActivity(), DatabaseContract.ScoresTable.buildScoreWithDate(),
-                null, null, new String[]{fragmentDate}, null);
+        return new CursorLoader(getActivity(), ScoresTable.buildScoreWithDate(),
+                Constants.SCORE_PROJECTION, null, new String[]{fragmentDate}, null);
     }
 
     @Override
@@ -104,6 +100,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
                 switch (Utility.getScoreStatus(getContext())) {
                     case MyFetchService.SCORE_STATUS_OK:
                         tvEmptyList.setText(R.string.no_matches_found_status_ok);
+                        update_scores();
                         break;
                     case MyFetchService.SCORE_STATUS_SERVER_DOWN:
                         tvEmptyList.setText(R.string.no_matches_found_status_server_down);
@@ -126,5 +123,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mAdapter.swapCursor(null);
+    }
+
+    private void update_scores() {
+        Intent service_start = new Intent(getActivity(), MyFetchService.class);
+        getActivity().startService(service_start);
     }
 }
