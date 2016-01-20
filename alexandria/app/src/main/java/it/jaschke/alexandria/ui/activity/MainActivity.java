@@ -12,10 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import it.jaschke.alexandria.R;
-import it.jaschke.alexandria.api.Callback;
 import it.jaschke.alexandria.services.BookService;
+import it.jaschke.alexandria.ui.adapter.Callback;
 import it.jaschke.alexandria.ui.fragment.BookDetailFragment;
-import it.jaschke.alexandria.ui.fragment.ListOfBooks;
+import it.jaschke.alexandria.ui.fragment.ListOfBooksFragment;
 import it.jaschke.alexandria.utility.Utility;
 
 
@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity implements Callback {
         }
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        Fragment nextFragment = new ListOfBooks();
+        Fragment nextFragment = new ListOfBooksFragment();
         loadFragment(nextFragment);
 
         messageReceiver = new MessageReceiver();

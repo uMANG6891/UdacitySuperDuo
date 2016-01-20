@@ -1,4 +1,4 @@
-package it.jaschke.alexandria.api;
+package it.jaschke.alexandria.ui.adapter;
 
 /**
  * Created by saj on 25/01/15.

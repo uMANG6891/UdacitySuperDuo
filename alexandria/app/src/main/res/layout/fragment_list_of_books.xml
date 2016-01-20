@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
     tools:context="it.jaschke.alexandria.ListOfBooks">
 
     <ImageButton
@@ -39,9 +41,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@id/searchButton"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:layout_below="@+id/searchText"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
         android:layout_toEndOf="@id/searchButton"
         android:layout_toRightOf="@id/searchButton" />
 

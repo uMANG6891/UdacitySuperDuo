@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="colorAccent">#2979FF</color>
     <color name="colorAccentDark">#2962FF</color>
+    <color name="windowBackground">#DDD</color>
 
     <color name="transparent">#00000000</color>
     <color name="status_text">#ffffffff</color>

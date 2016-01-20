@@ -11,4 +11,7 @@
     <dimen name="image_max_width">50dp</dimen>
     <dimen name="image_max_width_large">100dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="book_detail_padding">16dp</dimen>
 </resources>

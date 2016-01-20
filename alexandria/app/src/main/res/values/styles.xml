@@ -12,6 +12,18 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!--CardView-->
+    <style name="CardViewDefault">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardUseCompatPadding">true</item>
+    </style>
+
+    <style name="CardViewDefault.Clickable" parent="CardViewDefault">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

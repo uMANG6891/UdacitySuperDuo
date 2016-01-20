@@ -13,8 +13,8 @@ import android.view.MenuItem;
 
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.ui.fragment.AboutFragment;
-import it.jaschke.alexandria.ui.fragment.AddBook;
-import it.jaschke.alexandria.ui.fragment.ListOfBooks;
+import it.jaschke.alexandria.ui.fragment.AddBookFragment;
+import it.jaschke.alexandria.ui.fragment.ListOfBooksFragment;
 
 /**
  * Created by umang on 19/01/16.
@@ -60,11 +60,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             default:
             case R.id.navigation_item_library:
-                nextFragment = new ListOfBooks();
+                nextFragment = new ListOfBooksFragment();
                 loadFragment(nextFragment);
                 break;
             case R.id.navigation_item_library_add:
-                nextFragment = new AddBook();
+                nextFragment = new AddBookFragment();
                 loadFragment(nextFragment);
                 break;
             case R.id.navigation_item_about:

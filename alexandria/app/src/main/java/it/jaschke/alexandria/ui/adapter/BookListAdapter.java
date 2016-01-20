@@ -1,4 +1,4 @@
-package it.jaschke.alexandria.api;
+package it.jaschke.alexandria.ui.adapter;
 
 
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.koushikdutta.ion.Ion;
 
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
@@ -45,9 +45,12 @@ public class BookListAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         String imgUrl = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
-        Glide.with(context)
+        Ion.with(context)
                 .load(imgUrl)
-                .into(viewHolder.bookCover);
+                .withBitmap()
+                .placeholder(R.drawable.image_loading)
+                .error(R.drawable.image_error)
+                .intoImageView(viewHolder.bookCover);
 
         String bookTitle = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
         viewHolder.bookTitle.setText(bookTitle);

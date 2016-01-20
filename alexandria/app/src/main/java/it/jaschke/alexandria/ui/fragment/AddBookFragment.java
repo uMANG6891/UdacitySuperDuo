@@ -19,9 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.koushikdutta.ion.Ion;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,7 +30,7 @@ import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
 
 
-public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+public class AddBookFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
     @Bind(R.id.bookTitle)
     TextView tvBookTitle;
@@ -65,7 +65,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private String mScanContents = "Contents:";
 
 
-    public AddBook() {
+    public AddBookFragment() {
     }
 
     @Override
@@ -106,7 +106,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 bookIntent.putExtra(BookService.EAN, ISBNNumber);
                 bookIntent.setAction(BookService.FETCH_BOOK);
                 getActivity().startService(bookIntent);
-                AddBook.this.restartLoader();
+                AddBookFragment.this.restartLoader();
             }
         });
         bScan.setOnClickListener(this);
@@ -172,9 +172,12 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
             ivBookCover.setVisibility(View.VISIBLE);
-            Glide.with(this)
+            Ion.with(this)
                     .load(imgUrl)
-                    .into(ivBookCover);
+                    .withBitmap()
+                    .placeholder(R.drawable.image_loading)
+                    .error(R.drawable.image_error)
+                    .intoImageView(ivBookCover);
         }
 
         String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
@@ -209,7 +212,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.scan_button:
-                FragmentIntentIntegrator integrator = new FragmentIntentIntegrator(AddBook.this);
+                FragmentIntentIntegrator integrator = new FragmentIntentIntegrator(AddBookFragment.this);
                 integrator.initiateScan();
                 break;
             case R.id.save_button:

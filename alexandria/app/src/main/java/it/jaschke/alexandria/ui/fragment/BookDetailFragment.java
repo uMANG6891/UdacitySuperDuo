@@ -17,7 +17,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
+import com.koushikdutta.ion.Ion;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -134,9 +135,12 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
         tvAuthors.setText(authors.replace(",", "\n"));
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
-            Glide.with(this)
+            Ion.with(this)
                     .load(imgUrl)
-                    .into(ivFullBookCover);
+                    .withBitmap()
+                    .placeholder(R.drawable.image_loading)
+                    .error(R.drawable.image_error)
+                    .intoImageView(ivFullBookCover);
             ivFullBookCover.setVisibility(View.VISIBLE);
         }
 
