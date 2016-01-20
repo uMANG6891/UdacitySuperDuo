@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.util.Patterns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import com.koushikdutta.ion.Ion;
 
@@ -73,8 +72,8 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
         if (arguments != null) {
             eanBookId = arguments.getString(BookDetailActivity.EAN_BOOK_ID);
             eanIsTablet = arguments.getBoolean(BookDetailActivity.EAN_IS_TABLET);
-            getLoaderManager().restartLoader(LOADER_ID, null, this);
         }
+        getLoaderManager().initLoader(LOADER_ID, null, this);
         rootView = inflater.inflate(R.layout.fragment_full_book, container, false);
         ButterKnife.bind(this, rootView);
         bDelete.setOnClickListener(this);
@@ -101,64 +100,65 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(
-                getActivity(),
-                AlexandriaContract.BookEntry.buildFullBookUri(Long.parseLong(eanBookId)),
-                null,
-                null,
-                null,
-                null
-        );
+        switch (id) {
+            case LOADER_ID:
+                return new CursorLoader(
+                        getActivity(),
+                        AlexandriaContract.BookEntry.buildFullBookUri(Long.parseLong(eanBookId)),
+                        null,
+                        null,
+                        null,
+                        null
+                );
+            default:
+                return null;
+        }
     }
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        if (!data.moveToFirst()) {
-            return;
+        switch (loader.getId()) {
+            case LOADER_ID:
+                if (!data.moveToFirst()) {
+                    return;
+                }
+
+                bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
+                tvFullBookTitle.setText(bookTitle);
+                if (!eanIsTablet) {
+                    getActivity().setTitle(bookTitle);
+                }
+
+                String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
+                tvFullBookSubTitle.setText(bookSubTitle);
+
+                String desc = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.DESC));
+                tvDescription.setText(desc);
+
+                String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
+                if (authors != null) {
+                    String[] authorsArr = authors.split(",");
+                    tvAuthors.setLines(authorsArr.length);
+                    tvAuthors.setText(authors.replace(",", "\n"));
+                }
+                String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
+                Ion.with(this)
+                        .load(imgUrl)
+                        .withBitmap()
+                        .placeholder(R.drawable.image_loading)
+                        .error(R.drawable.image_error)
+                        .intoImageView(ivFullBookCover);
+
+                String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
+                tvCategories.setText(categories);
+                break;
+            default:
+                break;
         }
-
-        bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
-        tvFullBookTitle.setText(bookTitle);
-        if (!eanIsTablet) {
-            getActivity().setTitle(bookTitle);
-        }
-
-        String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
-        tvFullBookSubTitle.setText(bookSubTitle);
-
-        String desc = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.DESC));
-        tvDescription.setText(desc);
-
-        String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
-        tvAuthors.setLines(authorsArr.length);
-        tvAuthors.setText(authors.replace(",", "\n"));
-        String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
-        if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
-            Ion.with(this)
-                    .load(imgUrl)
-                    .withBitmap()
-                    .placeholder(R.drawable.image_loading)
-                    .error(R.drawable.image_error)
-                    .intoImageView(ivFullBookCover);
-            ivFullBookCover.setVisibility(View.VISIBLE);
-        }
-
-        String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
-        tvCategories.setText(categories);
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onDestroyView();
-        if (MainActivity.IS_TABLET && rootView.findViewById(R.id.right_container) == null) {
-            getActivity().getSupportFragmentManager().popBackStack();
-        }
     }
 
     @Override

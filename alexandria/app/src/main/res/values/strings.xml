@@ -43,4 +43,8 @@
     <string name="share_book_title">Share %1$s</string>
     <string name="search_for_book">Search for book</string>
     <string name="navigation_more">More</string>
+    <string name="title_description">Description:</string>
+    <string name="title_categories">Categories:</string>
+    <string name="title_authors">Authors:</string>
+    <string name="title_dash">-</string>
 </resources>

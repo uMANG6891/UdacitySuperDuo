@@ -166,9 +166,11 @@ public class AddBookFragment extends Fragment implements LoaderManager.LoaderCal
         tvBookSubTitle.setText(bookSubTitle);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
-        tvAuthors.setLines(authorsArr.length);
-        tvAuthors.setText(authors.replace(",", "\n"));
+        if (authors != null) {
+            String[] authorsArr = authors.split(",");
+            tvAuthors.setLines(authorsArr.length);
+            tvAuthors.setText(authors.replace(",", "\n"));
+        }
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
             ivBookCover.setVisibility(View.VISIBLE);

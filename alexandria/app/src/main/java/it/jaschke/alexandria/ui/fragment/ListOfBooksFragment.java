@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +68,6 @@ public class ListOfBooksFragment extends Fragment implements LoaderManager.Loade
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Log.e("clickec", "item");
                 Cursor cursor = bookListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
                     ((Callback) getActivity())
@@ -124,6 +122,18 @@ public class ListOfBooksFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         bookListAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onDestroyView();
+        getLoaderManager().destroyLoader(LOADER_ID);
     }
 
     @Override
