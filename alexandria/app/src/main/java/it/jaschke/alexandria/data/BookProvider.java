@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 /**
  * Created by saj on 24/12/14.
@@ -210,14 +209,12 @@ public class BookProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = uriMatcher.match(uri);
-        Uri returnUri;
+        Uri returnUri = null;
         switch (match) {
             case BOOK: {
                 long _id = db.insert(AlexandriaContract.BookEntry.TABLE_NAME, null, values);
                 if (_id > 0) {
                     returnUri = AlexandriaContract.BookEntry.buildBookUri(_id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 if (getContext() != null)
                     getContext().getContentResolver().notifyChange(AlexandriaContract.BookEntry.buildFullBookUri(_id), null);
@@ -227,16 +224,12 @@ public class BookProvider extends ContentProvider {
                 long _id = db.insert(AlexandriaContract.AuthorEntry.TABLE_NAME, null, values);
                 if (_id > 0)
                     returnUri = AlexandriaContract.AuthorEntry.buildAuthorUri(values.getAsLong("_id"));
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
             case CATEGORY: {
                 long _id = db.insert(AlexandriaContract.CategoryEntry.TABLE_NAME, null, values);
                 if (_id > 0)
                     returnUri = AlexandriaContract.CategoryEntry.buildCategoryUri(values.getAsLong("_id"));
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
             default:

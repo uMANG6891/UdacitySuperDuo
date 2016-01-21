@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context="it.jaschke.alexandria.AddBook">
 
     <ScrollView
@@ -15,7 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -28,37 +29,34 @@
                     android:layout_height="@dimen/image_max_width_large"
                     android:layout_marginTop="15dp"
                     android:adjustViewBounds="true"
-                    android:contentDescription="@string/book_cover" />
+                    android:contentDescription="@string/book_cover"
+                    android:src="@drawable/book_default" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:orientation="vertical"
+                    android:paddingEnd="20dp"
+                    android:paddingLeft="@dimen/activity_vertical_margin">
 
                     <TextView
                         android:id="@+id/fullBookTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:paddingEnd="20dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:paddingStart="20dp"
-                        android:textIsSelectable="true"
-                        android:textSize="@dimen/head_line"
+                        android:text="Book Title"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/fullBookSubTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginStart="20dp"
                         android:ellipsize="end"
                         android:maxLines="5"
-                        android:textSize="18sp" />
+                        android:text="Book Title"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
                 </LinearLayout>
             </LinearLayout>
 

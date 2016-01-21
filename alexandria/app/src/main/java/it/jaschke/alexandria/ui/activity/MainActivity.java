@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import it.jaschke.alexandria.R;
-import it.jaschke.alexandria.services.BookService;
+import it.jaschke.alexandria.data.FetchBookInfo;
 import it.jaschke.alexandria.ui.adapter.Callback;
 import it.jaschke.alexandria.ui.fragment.BookDetailFragment;
 import it.jaschke.alexandria.ui.fragment.ListOfBooksFragment;
@@ -36,9 +36,10 @@ public class MainActivity extends BaseActivity implements Callback {
             setContentView(R.layout.activity_main);
         }
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
-        Fragment nextFragment = new ListOfBooksFragment();
-        loadFragment(nextFragment);
+        if (savedInstanceState == null) {
+            Fragment nextFragment = new ListOfBooksFragment();
+            loadFragment(nextFragment);
+        }
 
         messageReceiver = new MessageReceiver();
         IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
@@ -80,19 +81,19 @@ public class MainActivity extends BaseActivity implements Callback {
                 message = R.string.search_status_no_network;
             } else {
                 switch (Utility.getSearchStatus(getBaseContext())) {
-                    case BookService.SEARCH_STATUS_OK:
+                    case FetchBookInfo.SEARCH_STATUS_OK:
                         message = -1;
                         break;
-                    case BookService.SEARCH_STATUS_OK_EMPTY:
+                    case FetchBookInfo.SEARCH_STATUS_OK_EMPTY:
                         message = R.string.search_status_ok_empty;
                         break;
-                    case BookService.SEARCH_STATUS_SERVER_DOWN:
+                    case FetchBookInfo.SEARCH_STATUS_SERVER_DOWN:
                         message = R.string.search_status_down;
                         break;
-                    case BookService.SEARCH_STATUS_SERVER_INVALID:
+                    case FetchBookInfo.SEARCH_STATUS_SERVER_INVALID:
                         message = R.string.search_status_invalid;
                         break;
-                    case BookService.SEARCH_STATUS_UNKNOWN:
+                    case FetchBookInfo.SEARCH_STATUS_UNKNOWN:
                         message = R.string.search_status_unknown;
                         break;
                     default:

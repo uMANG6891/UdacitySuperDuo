@@ -44,9 +44,6 @@
             android:name=".data.BookProvider"
             android:authorities="it.jaschke.alexandria"
             android:exported="false" />
-        <service
-            android:name=".services.BookService"
-            android:exported="false" />
     </application>
 
 </manifest>

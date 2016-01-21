@@ -48,8 +48,8 @@ public class BookListAdapter extends CursorAdapter {
         Ion.with(context)
                 .load(imgUrl)
                 .withBitmap()
-                .placeholder(R.drawable.image_loading)
-                .error(R.drawable.image_error)
+                .placeholder(R.drawable.book_default)
+                .error(R.drawable.book_default)
                 .intoImageView(viewHolder.bookCover);
 
         String bookTitle = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.TITLE));

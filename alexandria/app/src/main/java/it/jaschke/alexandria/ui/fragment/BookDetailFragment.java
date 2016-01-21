@@ -1,12 +1,12 @@
 package it.jaschke.alexandria.ui.fragment;
 
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
 
@@ -23,9 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
-import it.jaschke.alexandria.services.BookService;
 import it.jaschke.alexandria.ui.activity.BookDetailActivity;
-import it.jaschke.alexandria.ui.activity.MainActivity;
 import it.jaschke.alexandria.utility.Utility;
 
 
@@ -74,7 +73,7 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
             eanIsTablet = arguments.getBoolean(BookDetailActivity.EAN_IS_TABLET);
         }
         getLoaderManager().initLoader(LOADER_ID, null, this);
-        rootView = inflater.inflate(R.layout.fragment_full_book, container, false);
+        rootView = inflater.inflate(R.layout.fragment_book_detail, container, false);
         ButterKnife.bind(this, rootView);
         bDelete.setOnClickListener(this);
         return rootView;
@@ -145,8 +144,8 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
                 Ion.with(this)
                         .load(imgUrl)
                         .withBitmap()
-                        .placeholder(R.drawable.image_loading)
-                        .error(R.drawable.image_error)
+                        .placeholder(R.drawable.book_default)
+                        .error(R.drawable.book_default)
                         .intoImageView(ivFullBookCover);
 
                 String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
@@ -165,14 +164,31 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.delete_button:
-                Intent bookIntent = new Intent(getActivity(), BookService.class);
-                bookIntent.putExtra(BookService.EAN, eanBookId);
-                bookIntent.setAction(BookService.DELETE_BOOK);
-                getActivity().startService(bookIntent);
-                if (eanIsTablet)
-                    getActivity().getSupportFragmentManager().popBackStack();
-                else
-                    getActivity().finish();
+                AlertDialog.Builder builderDelete = new AlertDialog.Builder(getContext());
+                builderDelete.setTitle(R.string.dialog_title_delete)
+                        .setMessage(R.string.dialog_message_delete)
+                        .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Utility.deleteBook(getContext(), eanBookId);
+                                if (eanIsTablet) {
+                                    getActivity().getSupportFragmentManager().popBackStack();
+                                } else {
+                                    getActivity().finish();
+                                }
+                                Utility.deleteBook(getContext(), eanBookId);
+                                Toast.makeText(getContext(),
+                                        getString(R.string.book_deleted, bookTitle),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.dialog_button_dismiss, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
                 break;
             default:
                 break;
