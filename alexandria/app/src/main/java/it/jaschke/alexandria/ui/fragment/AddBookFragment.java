@@ -81,7 +81,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener {
 
         View rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
         ButterKnife.bind(this, rootView);
-        llBookDetail.setVisibility(View.GONE);
+        hideBookInfo();
 
         etEan.addTextChangedListener(
                 new TextWatcher() {
@@ -100,7 +100,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener {
                             ISBNNumber = "978" + ISBNNumber;
                         }
                         if (ISBNNumber.length() < 13) {
-                            llBookDetail.setVisibility(View.GONE);
+                            hideBookInfo();
                             return;
                         }
                         //Once we have an ISBN, get book info
@@ -108,7 +108,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener {
                                     @Override
                                     public void onComplete(ArrayMap<String, String> map) {
                                         if (map == null || map.keySet().size() <= 1) {
-                                            llBookDetail.setVisibility(View.GONE);
+                                            hideBookInfo();
                                             showErrorMessage();
                                         } else {
                                             BOOK_INFO = map;
@@ -127,10 +127,18 @@ public class AddBookFragment extends Fragment implements View.OnClickListener {
 
         if (savedInstanceState != null) {
             etEan.setText(savedInstanceState.getString(EAN_CONTENT));
-            llBookDetail.setVisibility(View.GONE);
+            hideBookInfo();
         }
 
         return rootView;
+    }
+
+    private void hideBookInfo() {
+        llBookDetail.setVisibility(View.GONE);
+    }
+
+    private void showBookInfo() {
+        llBookDetail.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
@@ -162,7 +170,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener {
     }
 
     private void showBookInfoOnUI() {
-        llBookDetail.setVisibility(View.VISIBLE);
+        showBookInfo();
         try {
             String bookTitle = BOOK_INFO.get(Constants.Book.TITLE);
             tvBookTitle.setText(bookTitle);

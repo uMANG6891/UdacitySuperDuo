@@ -71,7 +71,8 @@ public class ListOfBooksFragment extends Fragment implements LoaderManager.Loade
                 Cursor cursor = bookListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
                     ((Callback) getActivity())
-                            .onItemSelected(cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID)));
+                            .onItemSelected(view,
+                                    cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID)));
                 }
             }
         });
@@ -127,13 +128,7 @@ public class ListOfBooksFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().initLoader(LOADER_ID, null, this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onDestroyView();
-        getLoaderManager().destroyLoader(LOADER_ID);
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override

@@ -1,19 +1,26 @@
 package it.jaschke.alexandria.ui.activity;
 
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
+import android.view.View;
 import android.widget.Toast;
 
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.FetchBookInfo;
 import it.jaschke.alexandria.ui.adapter.Callback;
+import it.jaschke.alexandria.ui.fragment.AddBookFragment;
 import it.jaschke.alexandria.ui.fragment.BookDetailFragment;
 import it.jaschke.alexandria.ui.fragment.ListOfBooksFragment;
 import it.jaschke.alexandria.utility.Utility;
@@ -37,7 +44,23 @@ public class MainActivity extends BaseActivity implements Callback {
         }
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         if (savedInstanceState == null) {
-            Fragment nextFragment = new ListOfBooksFragment();
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            Fragment nextFragment;
+            int startWith;
+            try {
+                startWith = Integer.parseInt(sp.getString("pref_startFragment", "0"));
+            } catch (Exception e) {
+                startWith = 0;
+            }
+            switch (startWith) {
+                default:
+                case 0:
+                    nextFragment = new ListOfBooksFragment();
+                    break;
+                case 1:
+                    nextFragment = new AddBookFragment();
+                    break;
+            }
             loadFragment(nextFragment);
         }
 
@@ -53,7 +76,7 @@ public class MainActivity extends BaseActivity implements Callback {
     }
 
     @Override
-    public void onItemSelected(String ean) {
+    public void onItemSelected(View view, String ean) {
         Bundle bundle = new Bundle();
         bundle.putString(BookDetailActivity.EAN_BOOK_ID, ean);
         bundle.putBoolean(BookDetailActivity.EAN_IS_TABLET, IS_TABLET);
@@ -68,7 +91,15 @@ public class MainActivity extends BaseActivity implements Callback {
         } else {
             Intent i = new Intent(this, BookDetailActivity.class);
             i.putExtras(bundle);
-            startActivity(i);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                View iv = view.findViewById(R.id.fullBookCover);
+
+                Pair<View, String> ivPair = new Pair<>(iv, iv.getTransitionName());
+                Bundle b = ActivityOptions.makeSceneTransitionAnimation(this, ivPair).toBundle();
+                startActivity(i, b);
+            } else {
+                startActivity(i);
+            }
         }
 
     }

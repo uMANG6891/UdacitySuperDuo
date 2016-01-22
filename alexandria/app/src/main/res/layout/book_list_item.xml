@@ -10,6 +10,7 @@
         <ImageView
             android:id="@+id/fullBookCover"
             android:layout_width="@dimen/image_max_width"
+            android:transitionName="@string/transition_book_poster"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="4dip"

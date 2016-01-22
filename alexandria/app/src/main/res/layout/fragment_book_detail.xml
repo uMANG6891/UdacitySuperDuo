@@ -27,25 +27,28 @@
                     android:id="@+id/fullBookCover"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/image_max_width_large"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="@dimen/book_detail_padding"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/book_cover"
-                    android:src="@drawable/book_default" />
+                    android:src="@drawable/book_default"
+                    android:transitionName="@string/transition_book_poster" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/book_detail_padding"
                     android:orientation="vertical"
-                    android:paddingEnd="20dp"
-                    android:paddingLeft="@dimen/activity_vertical_margin">
+                    android:paddingEnd="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingStart="@dimen/activity_vertical_margin">
 
                     <TextView
                         android:id="@+id/fullBookTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Book Title"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:textStyle="bold" />
 
@@ -55,7 +58,6 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="5"
-                        android:text="Book Title"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
                 </LinearLayout>
             </LinearLayout>
