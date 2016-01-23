@@ -35,7 +35,7 @@
     <string name="action_share">Share</string>
     <string name="back_button">go back</string>
     <string name="button_ok">OK</string>
-    <string name="share_text">A must read book: %1$s</string>
+    <string name="share_text">A must read book: <xliff:g>%1$s</xliff:g></string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="about_text">This application gets book information from a Google API. All titles, cover images, and author information come from there.
@@ -46,7 +46,7 @@
     <string name="msg_default_status">Place a barcode inside the viewfinder rectangle to scan it.</string>
     <string name="msg_camera_framework_bug">Sorry, the Android camera encountered a problem. You may need to restart the device.</string>
 
-    <string name="share_book_title">Share %1$s</string>
+    <string name="share_book_title">Share <xliff:g>%1$s</xliff:g></string>
     <string name="search_for_book">Search for book</string>
     <string name="navigation_more">More</string>
     <string name="title_description">Description:</string>
@@ -72,4 +72,10 @@
     <string name="transition_book_poster">Book poster</string>
     <string name="no_books_found">No books found!</string>
     <string name="add_book">Add book</string>
+
+    <string name="description_add_book">Add new book</string>
+    <string name="description_scan_book">Scan book</string>
+    <string name="description_clear_screen">Clear screen</string>
+    <string name="description_save_book">Save book</string>
+    <string name="description_delete_book">Delete book</string>
 </resources>

@@ -145,6 +145,7 @@
         android:layout_gravity="end"
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
+        android:contentDescription="@string/description_delete_book"
         android:layout_marginRight="10dp"
         android:drawableLeft="@drawable/ic_action_discard"
         android:drawableStart="@drawable/ic_action_discard"

@@ -33,6 +33,7 @@
 
             <Button
                 android:id="@+id/scan_button"
+                android:contentDescription="@string/description_scan_book"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/scan_button" />
@@ -64,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:contentDescription="@string/clear"
+                    android:contentDescription="@string/description_clear_screen"
                     android:drawableLeft="@drawable/ic_action_clear"
                     android:drawableStart="@drawable/ic_action_clear"
                     android:text="@string/clear" />
@@ -76,7 +77,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
-                    android:contentDescription="@string/save_button"
+                    android:contentDescription="@string/description_save_book"
                     android:drawableLeft="@drawable/ic_action_save"
                     android:drawableStart="@drawable/ic_action_save"
                     android:text="@string/save_button" />

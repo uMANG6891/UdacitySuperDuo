@@ -38,6 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/scan_button"
+                android:contentDescription="@string/description_scan_book"
                 android:textColor="@color/buttonTextColor" />
 
         </LinearLayout>
@@ -70,6 +71,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:contentDescription="@string/description_clear_screen"
+                    android:drawableStart="@drawable/ic_action_clear"
                     android:drawableLeft="@drawable/ic_action_clear"
                     android:text="@string/clear" />
 
@@ -78,8 +81,10 @@
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/description_save_book"
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_action_save"
+                    android:drawableStart="@drawable/ic_action_save"
                     android:text="@string/save_button" />
 
             </LinearLayout>

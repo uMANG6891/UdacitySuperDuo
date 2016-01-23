@@ -59,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_book"
+            android:contentDescription="@string/description_add_book"
             android:textColor="@color/buttonTextColor" />
     </LinearLayout>
 
