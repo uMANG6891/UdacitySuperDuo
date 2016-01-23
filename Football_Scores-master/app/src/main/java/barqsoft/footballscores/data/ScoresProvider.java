@@ -149,8 +149,7 @@ public class ScoresProvider extends ContentProvider {
                 int returnCount = 0;
                 try {
                     for (ContentValues value : values) {
-                        long _id = db.insertWithOnConflict(DatabaseContract.SCORES_TABLE, null, value,
-                                SQLiteDatabase.CONFLICT_REPLACE);
+                        long _id = db.insert(DatabaseContract.SCORES_TABLE, null, value);
                         if (_id != -1) {
                             returnCount++;
                         }

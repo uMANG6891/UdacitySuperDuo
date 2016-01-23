@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.ui.activity.MainActivity;
-import barqsoft.footballscores.ui.fragment.MainScreenFragment;
 import barqsoft.footballscores.utility.Constants;
 import barqsoft.footballscores.utility.Utility;
 
@@ -54,6 +53,8 @@ public class ScoresAdapter extends CursorAdapter {
 
         String homeUrl = cursor.getString(Constants.COL_HOME_IMAGE_URL);
         String awayUrl = cursor.getString(Constants.COL_AWAY_IMAGE_URL);
+//        Log.e("homeUrl", homeUrl + ":");
+//        Log.e("awayUrl", awayUrl + ":");
         if (homeUrl == null || homeUrl.length() == 0) {
             Utility.getImageUrl(context, Constants.HOME, mHolder.home_crest, cursor.getString(Constants.COL_HOME_URL), cursor.getString(Constants.COL__ID));
         } else {

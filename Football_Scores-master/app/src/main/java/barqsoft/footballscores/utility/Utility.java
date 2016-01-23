@@ -4,13 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.koushikdutta.ion.Ion;
+import com.bumptech.glide.Glide;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -100,7 +102,6 @@ public class Utility {
             return getDayName(context, date.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.e("error", e.getLocalizedMessage());
         }
         return null;
     }
@@ -157,6 +158,7 @@ public class Utility {
 
 
     public static void getImageUrl(final Context context, final String homeOrAway, final ImageView ivCrest, String url, final String _id) {
+        loadImageWithPlaceholder(ivCrest);
         ScoreHttpClient client = new ScoreHttpClient(context);
         client.get(url, new AsyncHttpResponseHandler() {
                     @Override
@@ -175,7 +177,6 @@ public class Utility {
                                 }
                             }
                         }
-                        Log.e("url", crestUrl + ":");
 
                         // load image to imageView
                         if (crestUrl != null)
@@ -185,20 +186,23 @@ public class Utility {
 
                         // save image url to database
                         ContentValues values = new ContentValues();
-                        if (homeOrAway.equals(Constants.HOME))
+                        if (homeOrAway.equalsIgnoreCase(Constants.HOME))
                             values.put(ScoresTable.HOME_IMAGE_URL_COL, crestUrl);
-                        else if (homeOrAway.equals(Constants.AWAY))
+                        else if (homeOrAway.equalsIgnoreCase(Constants.AWAY))
                             values.put(ScoresTable.AWAY_IMAGE_URL_COL, crestUrl);
-                        if (values.size() > 0)
-                            context.getContentResolver().update(DatabaseContract.BASE_CONTENT_URI,
+                        Log.e("size", values.size() + ":" + _id + ":" + crestUrl);
+                        if (values.size() > 0) {
+                            int updated = context.getContentResolver().update(DatabaseContract.BASE_CONTENT_URI,
                                     values,
                                     ScoresTable._ID + " = ?",
                                     new String[]{_id});
+                            Log.e("updated", updated + ":");
+                        }
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable
-                            error) {
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        Log.e("onError", new String(responseBody) + ":");
                         loadImageWithError(ivCrest);
                     }
                 }
@@ -207,12 +211,16 @@ public class Utility {
     }
 
     public static void loadImage(Context context, ImageView ivCrest, String crestUrl) {
-        Ion.with(context)
+        Glide.with(context)
                 .load(crestUrl)
-                .withBitmap()
+                .asBitmap()
                 .placeholder(R.drawable.ic_launcher)
                 .error(R.drawable.no_icon)
-                .intoImageView(ivCrest);
+                .into(ivCrest);
+    }
+
+    private static void loadImageWithPlaceholder(ImageView crest) {
+        crest.setImageResource(R.drawable.ic_launcher);
     }
 
     private static void loadImageWithError(ImageView crest) {
@@ -230,7 +238,7 @@ public class Utility {
     }
 
     private static String getSeparatorString(String url) {
-        String pattern = "(/wikipedia/../)";
+        String pattern = "(/wikipedia/(?:..|commons)/)";
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(url);
         if (m.find()) {
@@ -241,16 +249,21 @@ public class Utility {
     }
 
     public static Bitmap getImageBitmapFromUrl(Context context, String url) {
-        if (url != null && url.length() != 0) try {
-            return Ion.with(context)
-                    .load(url)
-                    .withBitmap()
-                    .asBitmap()
-                    .get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
+        if (url != null && url.length() != 0) {
+            try {
+                return Glide.with(context)
+                        .load(url)
+                        .asBitmap()
+                        .into(-1, -1)
+                        .get();
+            } catch (InterruptedException | ExecutionException e) {
+                Log.e("widget error", e.getLocalizedMessage() + ":");
+            }
+            BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.no_icon);
+            return drawable.getBitmap();
+        } else {
+            BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.no_icon);
+            return drawable.getBitmap();
         }
-        return null;
     }
 }

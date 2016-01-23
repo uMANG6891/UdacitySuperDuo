@@ -48,6 +48,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
         mAdapter.detail_match_id = MainActivity.selected_match_id;
 
+        update_scores();
         score_list.setAdapter(mAdapter);
 
         tvEmptyList = (TextView) rootView.findViewById(R.id.empty_text_view);
@@ -100,7 +101,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
                 switch (Utility.getScoreStatus(getContext())) {
                     case MyFetchService.SCORE_STATUS_OK:
                         tvEmptyList.setText(R.string.no_matches_found_status_ok);
-                        update_scores();
                         break;
                     case MyFetchService.SCORE_STATUS_SERVER_DOWN:
                         tvEmptyList.setText(R.string.no_matches_found_status_server_down);

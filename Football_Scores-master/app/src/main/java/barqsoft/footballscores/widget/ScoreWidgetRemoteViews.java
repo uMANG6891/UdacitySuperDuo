@@ -80,16 +80,18 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
                                 cursor.getInt(Constants.COL_HOME_GOALS),
                                 cursor.getInt(Constants.COL_AWAY_GOALS)));
 
-                views.setImageViewResource(R.id.home_crest, R.drawable.no_icon);
-                views.setImageViewResource(R.id.away_crest, R.drawable.no_icon);
-                Bitmap image = Utility.getImageBitmapFromUrl(context, cursor.getString(Constants.COL_HOME_IMAGE_URL));
-                if (image != null) {
-                    views.setImageViewBitmap(R.id.home_crest, image);
-                }
-                image = Utility.getImageBitmapFromUrl(context, cursor.getString(Constants.COL_AWAY_IMAGE_URL));
-                if (image != null) {
-                    views.setImageViewBitmap(R.id.away_crest, image);
-                }
+//                views.setImageViewResource(R.id.home_crest, R.drawable.no_icon);
+//                views.setImageViewResource(R.id.away_crest, R.drawable.no_icon);
+//
+//                Bitmap image = Utility.getImageBitmapFromUrl(context, cursor.getString(Constants.COL_HOME_IMAGE_URL));
+//                if (image != null) {
+//                    views.setImageViewBitmap(R.id.home_crest, image);
+//                }
+//                image = Utility.getImageBitmapFromUrl(context, cursor.getString(Constants.COL_AWAY_IMAGE_URL));
+//                if (image != null) {
+//                    views.setImageViewBitmap(R.id.away_crest, image);
+//                }
+
 
                 views.setContentDescription(R.id.widget_item_main,
                         getString(R.string.score_title,
