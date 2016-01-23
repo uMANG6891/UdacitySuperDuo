@@ -70,4 +70,6 @@
     <string name="book_saved">Book <xliff:g>%1$s</xliff:g> saved.</string>
     <string name="book_deleted">Book <xliff:g>%1$s</xliff:g> deleted.</string>
     <string name="transition_book_poster">Book poster</string>
+    <string name="no_books_found">No books found!</string>
+    <string name="add_book">Add book</string>
 </resources>

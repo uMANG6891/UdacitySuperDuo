@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -12,8 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.ui.adapter.BookListAdapter;
@@ -23,9 +28,13 @@ import it.jaschke.alexandria.ui.adapter.Callback;
 public class ListOfBooksFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private BookListAdapter bookListAdapter;
-    private ListView bookList;
+    @Bind(R.id.listOfBooks)
+    ListView bookList;
     private int position = ListView.INVALID_POSITION;
-    private EditText searchText;
+    @Bind(R.id.searchText)
+    EditText searchText;
+    @Bind(R.id.llEmptyView)
+    LinearLayout llEmptyView;
 
     private final int LOADER_ID = 10;
 
@@ -47,11 +56,11 @@ public class ListOfBooksFragment extends Fragment implements LoaderManager.Loade
                 null, // values for "where" clause
                 null  // sort order
         );
+        View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
+        ButterKnife.bind(this, rootView);
 
 
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
-        View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
-        searchText = (EditText) rootView.findViewById(R.id.searchText);
         rootView.findViewById(R.id.searchButton).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -61,8 +70,8 @@ public class ListOfBooksFragment extends Fragment implements LoaderManager.Loade
                 }
         );
 
-        bookList = (ListView) rootView.findViewById(R.id.listOfBooks);
         bookList.setAdapter(bookListAdapter);
+        bookList.setEmptyView(llEmptyView);
 
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -135,5 +144,19 @@ public class ListOfBooksFragment extends Fragment implements LoaderManager.Loade
     public void onAttach(Context context) {
         super.onAttach(context);
         getActivity().setTitle(R.string.menu_books);
+    }
+
+    @OnClick(R.id.bAddBook)
+    void onAddBookClick() {
+        Fragment nextFragment = new AddBookFragment();
+        loadFragment(nextFragment);
+    }
+
+    protected void loadFragment(Fragment nextFragment) {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, nextFragment)
+                .addToBackStack(String.valueOf(getActivity().getTitle()))
+                .commit();
     }
 }
