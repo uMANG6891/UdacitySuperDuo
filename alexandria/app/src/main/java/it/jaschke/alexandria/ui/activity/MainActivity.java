@@ -10,23 +10,34 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.FetchBookInfo;
 import it.jaschke.alexandria.ui.adapter.Callback;
 import it.jaschke.alexandria.ui.fragment.AddBookFragment;
 import it.jaschke.alexandria.ui.fragment.BookDetailFragment;
 import it.jaschke.alexandria.ui.fragment.ListOfBooksFragment;
+import it.jaschke.alexandria.utility.Constants;
 import it.jaschke.alexandria.utility.Utility;
 
 
 public class MainActivity extends BaseActivity implements Callback {
+
+    @Nullable
+    @Bind(R.id.right_container)
+    FrameLayout flRightContainer;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     public static boolean IS_TABLET = false;
     private BroadcastReceiver messageReceiver;
@@ -42,7 +53,10 @@ public class MainActivity extends BaseActivity implements Callback {
         } else {
             setContentView(R.layout.activity_main);
         }
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
         if (savedInstanceState == null) {
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
             Fragment nextFragment;
@@ -52,6 +66,8 @@ public class MainActivity extends BaseActivity implements Callback {
             } catch (Exception e) {
                 startWith = 0;
             }
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(Constants.EAN_IS_TABLET, IS_TABLET);
             switch (startWith) {
                 default:
                 case 0:
@@ -61,6 +77,7 @@ public class MainActivity extends BaseActivity implements Callback {
                     nextFragment = new AddBookFragment();
                     break;
             }
+            nextFragment.setArguments(bundle);
             loadFragment(nextFragment);
         }
 
@@ -78,11 +95,12 @@ public class MainActivity extends BaseActivity implements Callback {
     @Override
     public void onItemSelected(View view, String ean) {
         Bundle bundle = new Bundle();
-        bundle.putString(BookDetailActivity.EAN_BOOK_ID, ean);
-        bundle.putBoolean(BookDetailActivity.EAN_IS_TABLET, IS_TABLET);
+        bundle.putString(Constants.EAN_BOOK_ID, ean);
+        bundle.putBoolean(Constants.EAN_IS_TABLET, IS_TABLET);
 
 
-        if (findViewById(R.id.right_container) != null) {
+        if (flRightContainer != null) {
+            flRightContainer.setVisibility(View.VISIBLE);
             BookDetailFragment fragment = new BookDetailFragment();
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()

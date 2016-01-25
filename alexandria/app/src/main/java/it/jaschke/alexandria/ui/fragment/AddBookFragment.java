@@ -30,6 +30,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.FetchBookInfo;
+import it.jaschke.alexandria.ui.activity.BaseActivity;
 import it.jaschke.alexandria.utility.Constants;
 import it.jaschke.alexandria.utility.Utility;
 
@@ -104,9 +105,11 @@ public class AddBookFragment extends Fragment implements View.OnClickListener {
                             return;
                         }
                         //Once we have an ISBN, get book info
+                        ((BaseActivity) getActivity()).showEndlessSnackBar(R.string.loading);
                         FetchBookInfo.load(getContext(), ISBNNumber, new FetchBookInfo.GetBookInfo() {
                                     @Override
                                     public void onComplete(ArrayMap<String, String> map) {
+                                        ((BaseActivity) getActivity()).hideEndlessSnackBar();
                                         if (map == null || map.keySet().size() <= 1) {
                                             hideBookInfo();
                                             showErrorMessage();
@@ -165,7 +168,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener {
                     break;
             }
         if (message != -1) {
-            Toast.makeText(getContext(), getString(message), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(message), Toast.LENGTH_SHORT).show();
         }
     }
 

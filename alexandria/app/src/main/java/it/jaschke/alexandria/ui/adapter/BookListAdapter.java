@@ -21,6 +21,7 @@ import it.jaschke.alexandria.data.AlexandriaContract;
 public class BookListAdapter extends CursorAdapter {
 
     Context context;
+    boolean IS_TABLET = false;
 
     public static class ViewHolder {
         public final ImageView bookCover;
@@ -34,15 +35,21 @@ public class BookListAdapter extends CursorAdapter {
         }
     }
 
-    public BookListAdapter(Context context, Cursor c, int flags) {
+
+    public BookListAdapter(Context context, Cursor c, int flags, boolean isTablet) {
         super(context, c, flags);
         this.context = context;
+        IS_TABLET = isTablet;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
         ViewHolder viewHolder = (ViewHolder) view.getTag();
+
+        if (IS_TABLET && cursor.getPosition() == 0) {
+            ((Callback) context).onItemSelected(view, cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID)));
+        }
 
         String imgUrl = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         Ion.with(context)

@@ -15,9 +15,6 @@ import it.jaschke.alexandria.ui.fragment.BookDetailFragment;
  */
 public class BookDetailActivity extends AppCompatActivity {
 
-    public static final String EAN_BOOK_ID = "EAN";
-    public static final String EAN_IS_TABLET = "extra_is_tablet";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

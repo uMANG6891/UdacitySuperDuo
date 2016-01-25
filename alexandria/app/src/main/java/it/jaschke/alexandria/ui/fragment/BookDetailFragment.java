@@ -24,7 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
-import it.jaschke.alexandria.ui.activity.BookDetailActivity;
+import it.jaschke.alexandria.utility.Constants;
 import it.jaschke.alexandria.utility.Utility;
 
 
@@ -69,8 +69,8 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            eanBookId = arguments.getString(BookDetailActivity.EAN_BOOK_ID);
-            eanIsTablet = arguments.getBoolean(BookDetailActivity.EAN_IS_TABLET);
+            eanBookId = arguments.getString(Constants.EAN_BOOK_ID);
+            eanIsTablet = arguments.getBoolean(Constants.EAN_IS_TABLET);
         }
         getLoaderManager().initLoader(LOADER_ID, null, this);
         rootView = inflater.inflate(R.layout.fragment_book_detail, container, false);

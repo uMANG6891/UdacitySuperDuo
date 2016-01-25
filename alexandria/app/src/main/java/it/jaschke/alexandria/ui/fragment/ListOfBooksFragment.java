@@ -21,12 +21,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
+import it.jaschke.alexandria.ui.activity.BookDetailActivity;
 import it.jaschke.alexandria.ui.adapter.BookListAdapter;
 import it.jaschke.alexandria.ui.adapter.Callback;
+import it.jaschke.alexandria.utility.Constants;
 
 
 public class ListOfBooksFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private boolean IS_TABLET = false;
     private BookListAdapter bookListAdapter;
     @Bind(R.id.listOfBooks)
     ListView bookList;
@@ -56,11 +59,12 @@ public class ListOfBooksFragment extends Fragment implements LoaderManager.Loade
                 null, // values for "where" clause
                 null  // sort order
         );
+        Bundle bundle = getArguments();
+        IS_TABLET = bundle.getBoolean(Constants.EAN_IS_TABLET);
         View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
         ButterKnife.bind(this, rootView);
 
-
-        bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
+        bookListAdapter = new BookListAdapter(getActivity(), cursor, 0, IS_TABLET);
         rootView.findViewById(R.id.searchButton).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
