@@ -37,6 +37,7 @@ app/build.gradle
 - [journeyapps/zxing-android-embedded](https://github.com/journeyapps/zxing-android-embedded)
 
 
+## License
 
 Copyright 2016 Umang Pandya
 
