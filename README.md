@@ -28,7 +28,7 @@ app/build.gradle
 
 ![](../master/screenshots/alexandria-detail.png)
 
-![](../master/screenshots/football-detail.png)
+![](../master/screenshots/football-main.png)
 
 ## Libraries Used
 - [JakeWharton/butterknife](https://github.com/JakeWharton/butterknife)
