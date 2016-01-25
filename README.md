@@ -31,7 +31,6 @@ app/build.gradle
 ![](../master/screenshots/football-detail.png)
 
 ## Libraries Used
-- [square/picasso](https://github.com/square/picasso)
 - [JakeWharton/butterknife](https://github.com/JakeWharton/butterknife)
 - [Android Asynchronous Http Client](http://loopj.com/android-async-http/)
 - [koush/ion](https://github.com/koush/ion)
