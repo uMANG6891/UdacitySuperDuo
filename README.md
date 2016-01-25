@@ -15,7 +15,27 @@ I made this project while my Nanodegree program with Udacity. This app uses most
 - Widget that shows Today's scores
 
 
-## Screens
+## Using/Editing Source code
+To use the source code you will need api key from [football-data.org](http://api.football-data.org/) to retrieve football scores data. Get your API key and paste it at:
+
+```
+app/build.gradle
+```
+
+## Screenshots
+
+![](../master/screenshots/alexandria-main.png)
+
+![](../master/screenshots/alexandria-detail.png)
+
+![](../master/screenshots/football-land-detail.png)
+
+## Libraries Used
+- [square/picasso](https://github.com/square/picasso)
+- [JakeWharton/butterknife](https://github.com/JakeWharton/butterknife)
+- [Android Asynchronous Http Client](http://loopj.com/android-async-http/)
+- [koush/ion](https://github.com/koush/ion)
+- [journeyapps/zxing-android-embedded](https://github.com/journeyapps/zxing-android-embedded)
 
 
 

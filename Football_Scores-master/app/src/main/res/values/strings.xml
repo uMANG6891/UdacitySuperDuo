@@ -3,8 +3,6 @@
 
     <string name="app_name">Football Scores</string>
 
-    <string name="api_key" translatable="false">YOUR_FOOTBALL_API_KEY</string>
-
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="tomorrow">Tomorrow</string>
