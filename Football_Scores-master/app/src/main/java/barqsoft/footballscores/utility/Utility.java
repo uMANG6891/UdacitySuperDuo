@@ -12,7 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.koushikdutta.ion.Ion;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -190,13 +189,11 @@ public class Utility {
                             values.put(ScoresTable.HOME_IMAGE_URL_COL, crestUrl);
                         else if (homeOrAway.equalsIgnoreCase(Constants.AWAY))
                             values.put(ScoresTable.AWAY_IMAGE_URL_COL, crestUrl);
-                        Log.e("size", values.size() + ":" + _id + ":" + crestUrl);
                         if (values.size() > 0) {
-                            int updated = context.getContentResolver().update(DatabaseContract.BASE_CONTENT_URI,
+                            context.getContentResolver().update(DatabaseContract.BASE_CONTENT_URI,
                                     values,
                                     ScoresTable._ID + " = ?",
                                     new String[]{_id});
-                            Log.e("updated", updated + ":");
                         }
                     }
 
@@ -211,12 +208,12 @@ public class Utility {
     }
 
     public static void loadImage(Context context, ImageView ivCrest, String crestUrl) {
-        Glide.with(context)
+        Ion.with(context)
                 .load(crestUrl)
-                .asBitmap()
+                .withBitmap()
                 .placeholder(R.drawable.ic_launcher)
                 .error(R.drawable.no_icon)
-                .into(ivCrest);
+                .intoImageView(ivCrest);
     }
 
     private static void loadImageWithPlaceholder(ImageView crest) {
@@ -248,22 +245,9 @@ public class Utility {
         }
     }
 
-    public static Bitmap getImageBitmapFromUrl(Context context, String url) {
-        if (url != null && url.length() != 0) {
-            try {
-                return Glide.with(context)
-                        .load(url)
-                        .asBitmap()
-                        .into(-1, -1)
-                        .get();
-            } catch (InterruptedException | ExecutionException e) {
-                Log.e("widget error", e.getLocalizedMessage() + ":");
-            }
-            BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.no_icon);
-            return drawable.getBitmap();
-        } else {
-            BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.no_icon);
-            return drawable.getBitmap();
-        }
+
+    private static Bitmap getNoIconDrawableBitmap(Context context) {
+        BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.no_icon);
+        return drawable.getBitmap();
     }
 }

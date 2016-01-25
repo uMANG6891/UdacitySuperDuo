@@ -11,16 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import barqsoft.footballscores.R;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
 public class AboutActivity extends AppCompatActivity {
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);

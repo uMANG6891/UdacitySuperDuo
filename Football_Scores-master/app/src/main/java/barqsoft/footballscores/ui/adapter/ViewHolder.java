@@ -6,27 +6,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import barqsoft.footballscores.R;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by yehya khaled on 2/26/2015.
  */
 public class ViewHolder {
-    public CardView cvMain;
-    public TextView home_name;
-    public TextView away_name;
-    public TextView score;
-    public TextView date;
-    public ImageView home_crest;
-    public ImageView away_crest;
+    @Bind(R.id.scores_list_main)
+    CardView cvMain;
+    @Bind(R.id.home_name)
+    TextView home_name;
+    @Bind(R.id.away_name)
+    TextView away_name;
+    @Bind(R.id.score_textview)
+    TextView score;
+    @Bind(R.id.data_textview)
+    TextView date;
+    @Bind(R.id.home_crest)
+    ImageView home_crest;
+    @Bind(R.id.away_crest)
+    ImageView away_crest;
     public double match_id;
 
     public ViewHolder(View view) {
-        cvMain = (CardView) view.findViewById(R.id.scores_list_main);
-        home_name = (TextView) view.findViewById(R.id.home_name);
-        away_name = (TextView) view.findViewById(R.id.away_name);
-        score = (TextView) view.findViewById(R.id.score_textview);
-        date = (TextView) view.findViewById(R.id.data_textview);
-        home_crest = (ImageView) view.findViewById(R.id.home_crest);
-        away_crest = (ImageView) view.findViewById(R.id.away_crest);
+        ButterKnife.bind(this, view);
     }
 }

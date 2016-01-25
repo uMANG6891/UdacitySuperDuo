@@ -2,10 +2,6 @@ package barqsoft.footballscores.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.ui.fragment.PagerFragment;

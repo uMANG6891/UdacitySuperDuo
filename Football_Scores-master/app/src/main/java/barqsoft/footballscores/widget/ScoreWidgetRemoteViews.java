@@ -6,9 +6,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Binder;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,7 +36,7 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
 
             @Override
             public void onCreate() {
-                context = getBaseContext();
+                context = getApplicationContext();
             }
 
             @Override
@@ -71,6 +75,12 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
                 if (position == AdapterView.INVALID_POSITION || cursor == null || !cursor.moveToPosition(position)) {
                     return null;
                 }
+//                if (position == 0) {
+//                    Glide.with(context).pauseRequests();
+//                } else if (position == getCount() - 1) {
+//                    Glide.with(context).resumeRequests();
+//                }
+
                 final RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_item_layout);
                 views.setTextViewText(R.id.home_name, cursor.getString(Constants.COL_HOME));
                 views.setTextViewText(R.id.away_name, cursor.getString(Constants.COL_AWAY));
@@ -80,22 +90,30 @@ public class ScoreWidgetRemoteViews extends RemoteViewsService {
                                 cursor.getInt(Constants.COL_HOME_GOALS),
                                 cursor.getInt(Constants.COL_AWAY_GOALS)));
 
-                views.setImageViewResource(R.id.home_crest, R.drawable.no_icon);
-                views.setImageViewResource(R.id.away_crest, R.drawable.no_icon);
+                views.setImageViewResource(R.id.home_crest, R.drawable.ic_launcher);
+                views.setImageViewResource(R.id.away_crest, R.drawable.ic_launcher);
 
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Bitmap image = Utility.getImageBitmapFromUrl(context, cursor.getString(Constants.COL_HOME_IMAGE_URL));
-                        if (image != null) {
-                            views.setImageViewBitmap(R.id.home_crest, image);
-                        }
-                        image = Utility.getImageBitmapFromUrl(context, cursor.getString(Constants.COL_AWAY_IMAGE_URL));
-                        if (image != null) {
-                            views.setImageViewBitmap(R.id.away_crest, image);
-                        }
-                    }
-                }.run();
+
+                Ion.with(context)
+                        .load(cursor.getString(Constants.COL_HOME_IMAGE_URL))
+                        .withBitmap()
+                        .asBitmap()
+                        .setCallback(new FutureCallback<Bitmap>() {
+                            @Override
+                            public void onCompleted(Exception e, Bitmap result) {
+                                views.setImageViewBitmap(R.id.home_crest, result);
+                            }
+                        });
+                Ion.with(context)
+                        .load(cursor.getString(Constants.COL_AWAY_IMAGE_URL))
+                        .withBitmap()
+                        .asBitmap()
+                        .setCallback(new FutureCallback<Bitmap>() {
+                            @Override
+                            public void onCompleted(Exception e, Bitmap result) {
+                                views.setImageViewBitmap(R.id.away_crest, result);
+                            }
+                        });
 
 
                 views.setContentDescription(R.id.widget_item_main,

@@ -26,6 +26,8 @@ import barqsoft.footballscores.R;
 import barqsoft.footballscores.ui.activity.AboutActivity;
 import barqsoft.footballscores.ui.activity.MainActivity;
 import barqsoft.footballscores.utility.Utility;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by yehya khaled on 2/27/2015.
@@ -33,9 +35,12 @@ import barqsoft.footballscores.utility.Utility;
 public class PagerFragment extends Fragment {
     FragmentActivity parentActivity;
     public static final int NUM_PAGES = 5;
-
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.pager)
     public ViewPager mPagerHandler;
-    private TabLayout tabLayout;
+    @Bind(R.id.tabs)
+    TabLayout tabLayout;
     private MyPageAdapter mPagerAdapter;
 
     private MainScreenFragment[] viewFragments = new MainScreenFragment[5];
@@ -44,13 +49,14 @@ public class PagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
 
+        ButterKnife.bind(this, rootView);
+
         setHasOptionsMenu(true);
         parentActivity = getActivity();
 
-        ((AppCompatActivity) parentActivity).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+        ((AppCompatActivity) parentActivity).setSupportActionBar(toolbar);
 
         parentActivity.setTitle(R.string.app_name);
-        mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
         mPagerAdapter = new MyPageAdapter(getChildFragmentManager());
         for (int i = 0; i < NUM_PAGES; i++) {
             Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
@@ -61,7 +67,6 @@ public class PagerFragment extends Fragment {
         mPagerHandler.setAdapter(mPagerAdapter);
         mPagerHandler.setCurrentItem(MainActivity.CURRENT_FRAGMENT);
 
-        tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mPagerHandler);
 
         return rootView;

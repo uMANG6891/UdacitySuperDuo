@@ -20,6 +20,8 @@ import barqsoft.footballscores.ui.activity.MainActivity;
 import barqsoft.footballscores.ui.adapter.ScoresAdapter;
 import barqsoft.footballscores.utility.Constants;
 import barqsoft.footballscores.utility.Utility;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * A placeholder fragment containing a simple emptyView.
@@ -29,8 +31,12 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public static final int SCORES_LOADER = 0;
     public String fragmentDate;
 
+    @Bind(R.id.scores_list)
+    ListView score_list;
+
     private final String SAVE_STATE_DATE = "save_state_date";
 
+    @Bind(R.id.empty_text_view)
     TextView tvEmptyList;
 
     public MainScreenFragment() {
@@ -44,14 +50,14 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
+        ButterKnife.bind(this, rootView);
+
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
         mAdapter.detail_match_id = MainActivity.selected_match_id;
 
         update_scores();
         score_list.setAdapter(mAdapter);
 
-        tvEmptyList = (TextView) rootView.findViewById(R.id.empty_text_view);
         score_list.setEmptyView(tvEmptyList);
 
         return rootView;
