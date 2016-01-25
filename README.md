@@ -28,7 +28,7 @@ app/build.gradle
 
 ![](../master/screenshots/alexandria-detail.png)
 
-![](../master/screenshots/football-land-detail.png)
+![](../master/screenshots/football-detail.png)
 
 ## Libraries Used
 - [square/picasso](https://github.com/square/picasso)
