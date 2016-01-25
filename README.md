@@ -19,7 +19,7 @@ I made this project while my Nanodegree program with Udacity. This app uses most
 To use the source code you will need api key from [football-data.org](http://api.football-data.org/) to retrieve football scores data. Get your API key and paste it at:
 
 ```
-app/build.gradle
+Football_Scores-master/app/build.gradle
 ```
 
 ## Screenshots
