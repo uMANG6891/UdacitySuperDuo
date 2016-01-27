@@ -93,8 +93,8 @@ public class ScoresAdapter extends CursorAdapter {
                     cursor.getInt(Constants.COL_LEAGUE)));
             TextView league = (TextView) v.findViewById(R.id.league_textview);
             league.setText(Utility.getLeague(cursor.getInt(Constants.COL_LEAGUE)));
-            Button share_button = (Button) v.findViewById(R.id.share_button);
-            share_button.setOnClickListener(new View.OnClickListener() {
+            Button shareButton = (Button) v.findViewById(R.id.share_button);
+            shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     context.startActivity(createShareForecastIntent(mHolder.home_name.getText() + " "

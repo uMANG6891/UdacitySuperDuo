@@ -42,4 +42,5 @@
     <string name="title_widget_scores">Today\'s Scores</string>
     <string name="date_format_ymd" translatable="false">yyyy-MM-dd</string>
     <string name="score_title"><xliff:g example="Liverpool">%1$s</xliff:g> versus <xliff:g>%2$s</xliff:g> at <xliff:g>%3$s</xliff:g>, <xliff:g>%4$s</xliff:g>. The game result is <xliff:g>%5$s</xliff:g> <xliff:g>%1$s</xliff:g> and <xliff:g>%6$s</xliff:g> <xliff:g>%2$s</xliff:g>.</string>
+    <string name="share_button_description">Share score</string>
 </resources>
